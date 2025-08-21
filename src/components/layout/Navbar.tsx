@@ -142,6 +142,7 @@ import {
 } from "@/components/ui/popover"
 import { Wallet } from "lucide-react"
 import { Link, NavLink } from "react-router"
+import { ModeToggle } from "./ModeToggle"
 // import { Link, NavLink } from "react-router-dom"
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -219,10 +220,10 @@ export default function Navbar() {
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
                         <Link to="/" className="flex items-center">
-                            <div className="p-2 rounded-xl bg-gradient-primary">
-                                <Wallet className="h-6 w-6 text-white" />
+                            <div className="p-2 rounded-xl ">
+                                <Wallet className="h-6 w-6 text-primary" />
                             </div>
-                            <span className="text-xl font-bold">PayWave</span>
+                            <span className="text-xl font-bold ">PayWave</span>
                         </Link>
 
                         {/* Navigation menu */}
@@ -251,11 +252,16 @@ export default function Navbar() {
 
                 {/* Right side */}
                 <div className="flex items-center gap-2">
-                    <Button asChild variant="ghost" size="sm" className="text-sm">
-                        <Link to="/signin">Sign In</Link>
+                    <ModeToggle></ModeToggle>
+                    {/* <Button asChild variant="ghost" size="sm" className="text-sm">
+                        <Link to="">Sign In</Link>
                     </Button>
-                    <Button asChild size="sm" className="text-sm btn-gradient">
-                        <Link to="/get-started">Get Started</Link>
+                    <Button asChild size="sm" className="text-sm ">
+                        <Link to="">Get Started</Link>
+                    </Button> */}
+
+                    <Button asChild className="text-sm text-white" >
+                        <Link to={"/login"}>Login</Link>
                     </Button>
                 </div>
             </div>

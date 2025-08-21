@@ -1,4 +1,6 @@
 import App from "@/App";
+import LoginPage from "@/pages/auth/LoginPage";
+import RegisterPage from "@/pages/auth/RegisterPage";
 import AboutPage from "@/pages/public/AboutPage";
 import ContractPage from "@/pages/public/ContractPage";
 import FAQPage from "@/pages/public/FAQPage";
@@ -38,5 +40,13 @@ export const router = createBrowserRouter([
                 Component: FAQPage
             },
         ]
+    },
+    {
+        path: "/login",
+        Component: LoginPage,
+    },
+    {
+        path: "/register",
+        Component: RegisterPage,
     },
 ]);
