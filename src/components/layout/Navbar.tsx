@@ -129,6 +129,7 @@
 //////////////////////////
 
 
+import Logo from "@/assets/icons/Logo"
 import { Button } from "@/components/ui/button"
 import {
     NavigationMenu,
@@ -140,10 +141,8 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
-import { Wallet } from "lucide-react"
 import { Link, NavLink } from "react-router"
 import { ModeToggle } from "./ModeToggle"
-import Logo from "@/assets/icons/Logo"
 // import { Link, NavLink } from "react-router-dom"
 
 // Navigation links array to be used in both desktop and mobile menus
