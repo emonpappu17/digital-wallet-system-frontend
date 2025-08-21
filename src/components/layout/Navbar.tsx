@@ -143,6 +143,7 @@ import {
 import { Wallet } from "lucide-react"
 import { Link, NavLink } from "react-router"
 import { ModeToggle } from "./ModeToggle"
+import Logo from "@/assets/icons/Logo"
 // import { Link, NavLink } from "react-router-dom"
 
 // Navigation links array to be used in both desktop and mobile menus
@@ -219,12 +220,13 @@ export default function Navbar() {
 
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
-                        <Link to="/" className="flex items-center">
+                        {/* <Link to="/" className="flex items-center">
                             <div className="p-2 rounded-xl ">
                                 <Wallet className="h-6 w-6 text-primary" />
                             </div>
                             <span className="text-xl font-bold ">PayWave</span>
-                        </Link>
+                        </Link> */}
+                        <Logo></Logo>
 
                         {/* Navigation menu */}
                         <NavigationMenu className="max-md:hidden">
