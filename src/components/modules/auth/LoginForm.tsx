@@ -86,10 +86,11 @@ import { LoadingSpinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import { useLoginMutation } from "@/redux/features/authApi"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { log } from "console"
 import { useForm } from "react-hook-form"
 import { Link, useNavigate } from "react-router"
 import { toast } from "sonner"
+import { motion } from "framer-motion"
+
 import z from "zod"
 
 
@@ -133,7 +134,6 @@ export function LoginForm({
 
 
     const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-        console.log('values===>', values);
         try {
             // api call
             const { identifier, password } = values;
@@ -142,8 +142,7 @@ export function LoginForm({
 
             const payload = isEmail ? { email: identifier, password } : { phoneNumber: identifier, password }
 
-            const res = await login(payload).unwrap();
-            console.log('login res:==>', res);
+            await login(payload).unwrap();
             toast.success("Logged in Successful!!")
             navigate("/")
         } catch (err: any) {
@@ -153,80 +152,89 @@ export function LoginForm({
     };
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Login</CardTitle>
-                    <CardDescription>
-                        Access your PayWave account with your email or phone number
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form
-                            onSubmit={form.handleSubmit(onSubmit)}
-                            className="space-y-6"
-                        >
-                            {/* Email or Phone field */}
-                            <FormField
-                                control={form.control}
-                                name="identifier"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email or Phone</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Enter your email or phone number"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
 
-                            {/* Password field */}
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Password {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            {/* 
+
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="w-full max-w-md"
+            >
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Login</CardTitle>
+                        <CardDescription>
+                            Access your PayWave account with your email or phone number
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...form}>
+                            <form
+                                onSubmit={form.handleSubmit(onSubmit)}
+                                className="space-y-6"
+                            >
+                                {/* Email or Phone field */}
+                                <FormField
+                                    control={form.control}
+                                    name="identifier"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email or Phone</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Enter your email or phone number"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                {/* Password field */}
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Password {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                {/* 
                             <Button type="submit" className="w-full text-white">
                                 Login
                             </Button> */}
 
-                            <Button
-                                type="submit"
-                                className="w-full text-white"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? (
-                                    <>
-                                        <LoadingSpinner size="sm" className="mr-2" />
-                                        Logging...
-                                    </>
-                                ) : (
-                                    'Login'
-                                )}
-                            </Button>
-                        </form>
-                    </Form>
-                    <div className="mt-4 text-center text-sm">
-                        Don&apos;t have an account?{" "}
-                        <Link to="/register" replace className="underline underline-offset-4 hover:text-primary/90">
-                            Register
-                        </Link>
-                    </div>
-                </CardContent>
-            </Card>
+                                <Button
+                                    type="submit"
+                                    className="w-full text-white"
+                                    disabled={isLoading}
+                                >
+                                    {isLoading ? (
+                                        <>
+                                            <LoadingSpinner size="sm" className="mr-2" />
+                                            Logging...
+                                        </>
+                                    ) : (
+                                        'Login'
+                                    )}
+                                </Button>
+                            </form>
+                        </Form>
+                        <div className="mt-4 text-center text-sm">
+                            Don&apos;t have an account?{" "}
+                            <Link to="/register" replace className="underline underline-offset-4 hover:text-primary/90">
+                                Register
+                            </Link>
+                        </div>
+                    </CardContent>
+                </Card>
+            </motion.div>
         </div>
     )
 }

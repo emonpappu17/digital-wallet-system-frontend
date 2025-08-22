@@ -236,6 +236,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { z } from "zod";
+import { motion } from "framer-motion"
 
 type RoleType = "user" | "agent";
 
@@ -342,166 +343,172 @@ const RegisterForm = ({
 
     return (
         <div className={cn("flex flex-col gap-6 max-w-lg mx-auto", className)} {...props}>
-            <Card>
-                <CardHeader>
-                    <CardTitle>Create Account</CardTitle>
-                    <CardDescription>Join PayWave — fast and secure wallet.</CardDescription>
-                </CardHeader>
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="w-full max-w-md">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Create Account</CardTitle>
+                        <CardDescription>Join PayWave — fast and secure wallet.</CardDescription>
+                    </CardHeader>
 
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField
-                                control={form.control}
-                                name="role"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Account Type</FormLabel>
-                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <CardContent>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                                <FormField
+                                    control={form.control}
+                                    name="role"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Account Type</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Select account type" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="user">Personal User</SelectItem>
+                                                    <SelectItem value="agent">Service Agent</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="name"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Full Name</FormLabel>
                                             <FormControl>
-                                                <SelectTrigger className="w-full">
-                                                    <SelectValue placeholder="Select account type" />
-                                                </SelectTrigger>
+                                                <Input placeholder="Your full name" {...field} />
                                             </FormControl>
-                                            <SelectContent>
-                                                <SelectItem value="user">Personal User</SelectItem>
-                                                <SelectItem value="agent">Service Agent</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Full Name</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Your full name" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                <FormField
+                                    control={form.control}
+                                    name="email"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Email</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="you@example.com" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Email</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="you@example.com" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                <FormField
+                                    control={form.control}
+                                    name="phone"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Phone Number</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="+8801XXXXXXXXX or 01XXXXXXXXX" {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
 
-                            <FormField
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Phone Number</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="+8801XXXXXXXXX or 01XXXXXXXXX" {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            {selectedRole === "agent" && (
-                                <>
-                                    <FormField
-                                        control={form.control}
-                                        name="shopName"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>Shop / Business Name</FormLabel>
-                                                <FormControl>
-                                                    <Input placeholder="Shop name (for agent listing)" {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-
-                                    <FormField
-                                        control={form.control}
-                                        name="nidNumber"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel>NID / Passport Number </FormLabel>
-                                                <FormControl>
-                                                    <Input
-                                                        type="number"
-                                                        placeholder="Optional: NID or passport no." {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </>
-                            )}
-
-                            <FormField
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Password</FormLabel>
-                                        <FormControl>
-                                            <Password {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <FormField
-                                control={form.control}
-                                name="confirmPassword"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Confirm Password</FormLabel>
-                                        <FormControl>
-                                            <Password {...field} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-
-                            <Button
-                                type="submit"
-                                className="w-full text-white"
-                                disabled={isLoading || agentRegisterLoading}
-                            >
-                                {isLoading || agentRegisterLoading ? (
+                                {selectedRole === "agent" && (
                                     <>
-                                        <LoadingSpinner size="sm" className="mr-2" />
-                                        Creating account...
-                                    </>
-                                ) : (
-                                    'Create account'
-                                )}
-                            </Button>
+                                        <FormField
+                                            control={form.control}
+                                            name="shopName"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Shop / Business Name</FormLabel>
+                                                    <FormControl>
+                                                        <Input placeholder="Shop name (for agent listing)" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                            <div className="text-center text-sm">
-                                Already have an account?{" "}
-                                <Link to="/login" className="underline  hover:text-primary/90">
-                                    Login
-                                </Link>
-                            </div>
-                        </form>
-                    </Form>
-                </CardContent>
-            </Card>
+                                        <FormField
+                                            control={form.control}
+                                            name="nidNumber"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>NID / Passport Number </FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            placeholder="Optional: NID or passport no." {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </>
+                                )}
+
+                                <FormField
+                                    control={form.control}
+                                    name="password"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Password</FormLabel>
+                                            <FormControl>
+                                                <Password {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="confirmPassword"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Confirm Password</FormLabel>
+                                            <FormControl>
+                                                <Password {...field} />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <Button
+                                    type="submit"
+                                    className="w-full text-white"
+                                    disabled={isLoading || agentRegisterLoading}
+                                >
+                                    {isLoading || agentRegisterLoading ? (
+                                        <>
+                                            <LoadingSpinner size="sm" className="mr-2" />
+                                            Creating account...
+                                        </>
+                                    ) : (
+                                        'Create account'
+                                    )}
+                                </Button>
+
+                                <div className="text-center text-sm">
+                                    Already have an account?{" "}
+                                    <Link to="/login" className="underline  hover:text-primary/90">
+                                        Login
+                                    </Link>
+                                </div>
+                            </form>
+                        </Form>
+                    </CardContent>
+                </Card>
+            </motion.div>
         </div>
     );
 };
