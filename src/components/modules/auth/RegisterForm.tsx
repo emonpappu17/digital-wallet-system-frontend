@@ -229,7 +229,7 @@ import {
 } from "@/components/ui/select";
 import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
-import { useRegisterUserMutation } from "@/redux/features/authApi";
+import { useRegisterAgentMutation, useRegisterUserMutation } from "@/redux/features/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -270,9 +270,6 @@ const registerSchema = z
         }),
         shopName: z.string(),
         nidNumber: z.string().optional().or(z.literal("")),
-        // acceptTerms: z.literal(true, {
-        //     errorMap: () => ({ message: "You must accept the terms and conditions" }),
-        // }),
     })
     .refine((d) => d.password === d.confirmPassword, {
         message: "Passwords do not match",
@@ -280,26 +277,6 @@ const registerSchema = z
     });
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
-
-
-
-
-
-async function mockRegisterAgent(payload: Partial<RegisterFormValues>) {
-    await sleep();
-    console.log("[mock] register agent:", payload);
-    // agent will be created with pending status server-side (typical)
-    return {
-        agent: {
-            id: "agent_mock_1",
-            name: payload.name,
-            phone: payload.phone,
-            role: "agent",
-            status: "pending_approval",
-        },
-        token: "mock-jwt-agent-abc",
-    };
-}
 
 
 const RegisterForm = ({
@@ -310,6 +287,7 @@ const RegisterForm = ({
 
     // API Calls
     const [registerUser, { isLoading }] = useRegisterUserMutation();
+    const [registerAgent, { isLoading: agentRegisterLoading }] = useRegisterAgentMutation();
 
     const form = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
@@ -322,14 +300,12 @@ const RegisterForm = ({
             role: "user",
             shopName: "",
             nidNumber: "",
-            // acceptTerms: false,
         },
     });
 
     const onSubmit = async (values: RegisterFormValues) => {
         console.log('values===>', values);
         try {
-            // disable UI ideally (not shown here) while awaiting
             if (values.role === "user") {
                 const userInfo = {
                     name: values.name,
@@ -337,17 +313,23 @@ const RegisterForm = ({
                     phoneNumber: values.phone,
                     password: values.password
                 }
-                const res = await registerUser(userInfo).unwrap();
-                console.log("User registered res:", res);
+                await registerUser(userInfo).unwrap();
                 form.reset();
-                toast.success("Registration successful! Welcome to PayWave!")
-                // navigate("/dashboard");
+                toast.success("Registration successful! please Login!")
+                navigate("/");
             } else {
-                const res = await mockRegisterAgent(values);
-                console.log("Agent registered (mock):", res);
-                // Agents often start as pending — show pending screen or redirect
-         
-                // navigate("/dashboard"); // or /agent/pending
+                const agentInfo = {
+                    name: values.name,
+                    email: values.email,
+                    phoneNumber: values.phone,
+                    password: values.password,
+                    nidNumber: values.nidNumber,
+                    shopName: values.shopName,
+                }
+                await registerAgent(agentInfo).unwrap();
+                toast.success("Registration successful! wait for Admin approval!")
+                form.reset();
+                navigate("/agent/pending");
             }
         } catch (err: any) {
             console.error("Registration failed", err);
@@ -454,9 +436,11 @@ const RegisterForm = ({
                                         name="nidNumber"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>NID / Passport (optional)</FormLabel>
+                                                <FormLabel>NID / Passport Number </FormLabel>
                                                 <FormControl>
-                                                    <Input placeholder="Optional: NID or passport no." {...field} />
+                                                    <Input
+                                                        type="number"
+                                                        placeholder="Optional: NID or passport no." {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -493,37 +477,12 @@ const RegisterForm = ({
                                 )}
                             />
 
-                            {/* <FormField
-                                control={form.control}
-                                name="acceptTerms"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <label className="flex items-center gap-2">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={!!field.value}
-                                                    onChange={(e) => field.onChange(e.target.checked)}
-                                                    className="h-4 w-4 rounded"
-                                                />
-                                                <span className="text-sm">I accept the Terms & Conditions</span>
-                                            </label>
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            /> */}
-
-                            {/* <Button type="submit" className="w-full text-white">
-                                Create Account
-                            </Button> */}
-
                             <Button
                                 type="submit"
                                 className="w-full text-white"
-                                disabled={isLoading}
+                                disabled={isLoading || agentRegisterLoading}
                             >
-                                {isLoading ? (
+                                {isLoading || agentRegisterLoading ? (
                                     <>
                                         <LoadingSpinner size="sm" className="mr-2" />
                                         Creating account...

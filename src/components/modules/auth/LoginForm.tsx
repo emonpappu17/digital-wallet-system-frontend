@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { Button } from "@/components/ui/button"
 // import {
 //     Card,
@@ -81,10 +82,14 @@ import {
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import Password from "@/components/ui/Password"
+import { LoadingSpinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
+import { useLoginMutation } from "@/redux/features/authApi"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { log } from "console"
 import { useForm } from "react-hook-form"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
+import { toast } from "sonner"
 import z from "zod"
 
 
@@ -113,6 +118,10 @@ export function LoginForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+    const navigate = useNavigate();
+
+    // API Call
+    const [login, { isLoading }] = useLoginMutation();
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -122,10 +131,26 @@ export function LoginForm({
         }
     })
 
-    const onSubmit = (values: z.infer<typeof loginSchema>) => {
-        console.log("Login form values:", values)
-        // 👉 Here you’d call your API (email/phone + password)
-    }
+
+    const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+        console.log('values===>', values);
+        try {
+            // api call
+            const { identifier, password } = values;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isEmail = emailRegex.test(identifier);
+
+            const payload = isEmail ? { email: identifier, password } : { phoneNumber: identifier, password }
+
+            const res = await login(payload).unwrap();
+            console.log('login res:==>', res);
+            toast.success("Logged in Successful!!")
+            navigate("/")
+        } catch (err: any) {
+            console.error("Login failed", err);
+            toast.error(err?.data.message || "Login failed. Try again.");
+        }
+    };
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
@@ -173,9 +198,24 @@ export function LoginForm({
                                     </FormItem>
                                 )}
                             />
-
+                            {/* 
                             <Button type="submit" className="w-full text-white">
                                 Login
+                            </Button> */}
+
+                            <Button
+                                type="submit"
+                                className="w-full text-white"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <LoadingSpinner size="sm" className="mr-2" />
+                                        Logging...
+                                    </>
+                                ) : (
+                                    'Login'
+                                )}
                             </Button>
                         </form>
                     </Form>

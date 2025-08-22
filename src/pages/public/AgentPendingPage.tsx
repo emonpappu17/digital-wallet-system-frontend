@@ -32,7 +32,7 @@ const AgentPendingPage = () => {
                         <div className="flex flex-col gap-3">
 
                             <Link to={'/'}>
-                                <Button variant="outline" className="w-full">
+                                <Button variant="default" className="w-full text-white">
                                     <ArrowRight className="mr-2 h-4 w-4" />
                                     Go Back to Home
                                 </Button>
