@@ -2,6 +2,7 @@ import App from "@/App";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import AboutPage from "@/pages/public/AboutPage";
+import AgentPendingPage from "@/pages/public/AgentPendingPage";
 import ContractPage from "@/pages/public/ContractPage";
 import FAQPage from "@/pages/public/FAQPage";
 import FeaturesPage from "@/pages/public/FeaturesPage";
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
     {
         path: "/login",
         Component: LoginPage,
+    },
+    {
+        path: "/agent/pending",
+        Component: AgentPendingPage,
     },
     {
         path: "/register",

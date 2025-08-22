@@ -40,11 +40,7 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* ------------- GRADIENTS (added) ------------- */
-  --color-gradient-primary: var(--gradient-primary);
-  --color-gradient-hero: var(--gradient-hero);
-  --color-gradient-card: var(--gradient-card);
-  --color-gradient-success: var(--gradient-success);
+
 }
 
 :root {
@@ -80,12 +76,6 @@
   --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.623 0.214 259.815);
-
-  /* Gradients (uses existing oklch variables so they follow light/dark tokens) */
-  --gradient-primary: linear-gradient(90deg, #2D77FF 0%, #2AB8FF 50%, #00D1C7 100%);
-  --gradient-hero: linear-gradient(90deg, #2D77FF 0%, #4DBEFF 35%, #00D1C7 100%);
-  --gradient-card: linear-gradient(145deg, var(--card) 0%, color-mix(in oklch, var(--muted) 40%, var(--card) 60%) 100%);
-  --gradient-success: linear-gradient(135deg, var(--success, oklch(0.6 0.1 140)) 0%, color-mix(in oklch, var(--success, oklch(0.6 0.1 140)) 60%, oklch(1 0 0) 40%) 100%);
 }
 
 .dark {
@@ -120,17 +110,6 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.488 0.243 264.376);
-
-  /* Dark-mode gradients */
-  /* --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, color-mix(in oklch, var(--primary) 30%, oklch(0.145 0 0) 70%) 100%);
-  --gradient-card: linear-gradient(145deg, var(--card) 0%, color-mix(in oklch, var(--muted) 40%, var(--card) 60%) 100%);
-  --gradient-success: linear-gradient(135deg, var(--success, oklch(0.6 0.1 140)) 0%, color-mix(in oklch, var(--success, oklch(0.6 0.1 140)) 70%, oklch(0.145 0 0) 30%) 100%); */
-
-  --gradient-primary: linear-gradient(90deg, #2D77FF 0%, #2AB8FF 50%, #00D1C7 100%);
-  --gradient-hero: linear-gradient(90deg, #2D77FF 0%, #4DBEFF 35%, #00D1C7 100%);
-  --gradient-card: linear-gradient(145deg, var(--card) 0%, color-mix(in oklch, var(--muted) 40%, var(--card) 60%) 100%);
-  --gradient-success: linear-gradient(135deg, var(--success, oklch(0.6 0.1 140)) 0%, color-mix(in oklch, var(--success, oklch(0.6 0.1 140)) 70%, oklch(0.145 0 0) 30%) 100%);
 }
 
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { Button } from "@/components/ui/button"
 // import {
 //     Card,
@@ -201,8 +202,6 @@
 
 
 // src/components/auth/RegisterForm.tsx
-import React from "react";
-import { useNavigate, Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -228,9 +227,14 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { LoadingSpinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { useRegisterUserMutation } from "@/redux/features/authApi";
 import { zodResolver } from "@hookform/resolvers/zod";
+import React from "react";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { z } from "zod";
 
 type RoleType = "user" | "agent";
@@ -277,24 +281,9 @@ const registerSchema = z
 
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
-/**
- * Mock API calls - replace with RTK Query or axios calls in your app.
- */
-const sleep = (ms = 600) => new Promise((r) => setTimeout(r, ms));
 
-async function mockRegisterUser(payload: Partial<RegisterFormValues>) {
-    await sleep();
-    console.log("[mock] register user:", payload);
-    return {
-        user: {
-            id: "user_mock_1",
-            name: payload.name,
-            phone: payload.phone,
-            role: "user",
-        },
-        token: "mock-jwt-user-abc",
-    };
-}
+
+
 
 async function mockRegisterAgent(payload: Partial<RegisterFormValues>) {
     await sleep();
@@ -312,14 +301,15 @@ async function mockRegisterAgent(payload: Partial<RegisterFormValues>) {
     };
 }
 
-/**
- * Component
- */
+
 const RegisterForm = ({
     className,
     ...props
 }: React.HTMLAttributes<HTMLDivElement>) => {
     const navigate = useNavigate();
+
+    // API Calls
+    const [registerUser, { isLoading }] = useRegisterUserMutation();
 
     const form = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
@@ -341,23 +331,27 @@ const RegisterForm = ({
         try {
             // disable UI ideally (not shown here) while awaiting
             if (values.role === "user") {
-                const res = await mockRegisterUser(values);
-                console.log("User registered (mock):", res);
-                // store token in redux / localStorage based on your auth strategy
-                // localStorage.setItem("token", res.token);
-                // redirect to user dashboard
-                alert("User registered successfully (mock). Redirecting to dashboard...");
+                const userInfo = {
+                    name: values.name,
+                    email: values.email,
+                    phoneNumber: values.phone,
+                    password: values.password
+                }
+                const res = await registerUser(userInfo).unwrap();
+                console.log("User registered res:", res);
+                form.reset();
+                toast.success("Registration successful! Welcome to PayWave!")
                 // navigate("/dashboard");
             } else {
                 const res = await mockRegisterAgent(values);
                 console.log("Agent registered (mock):", res);
                 // Agents often start as pending — show pending screen or redirect
-                alert("Agent registered (mock). Your account is pending approval.");
+         
                 // navigate("/dashboard"); // or /agent/pending
             }
         } catch (err: any) {
             console.error("Registration failed", err);
-            alert(err?.message || "Registration failed. Try again.");
+            toast.error(err?.data.message || "Registration failed. Try again.");
         }
     };
 
@@ -520,13 +514,28 @@ const RegisterForm = ({
                                 )}
                             /> */}
 
-                            <Button type="submit" className="w-full text-white">
+                            {/* <Button type="submit" className="w-full text-white">
                                 Create Account
+                            </Button> */}
+
+                            <Button
+                                type="submit"
+                                className="w-full text-white"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <LoadingSpinner size="sm" className="mr-2" />
+                                        Creating account...
+                                    </>
+                                ) : (
+                                    'Create account'
+                                )}
                             </Button>
 
                             <div className="text-center text-sm">
                                 Already have an account?{" "}
-                                <Link to="/login" className="underline">
+                                <Link to="/login" className="underline  hover:text-primary/90">
                                     Login
                                 </Link>
                             </div>
