@@ -9,7 +9,15 @@ export const authApi = baseApi.injectEndpoints({
                 data: userInfo
             }),
             invalidatesTags: ["USER"]
-        })
+        }),
+        registerAgent: builder.mutation({
+            query: (agentInfo) => ({
+                url: "/agent-requests",
+                method: "POST",
+                data: agentInfo
+            }),
+            invalidatesTags: ["USER"]
+        }),
     })
 })
 
