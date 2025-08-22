@@ -1,6 +1,8 @@
 import App from "@/App";
+import DashboardLayout from "@/components/layout/DashboardLayout";
 import LoginPage from "@/pages/auth/LoginPage";
 import RegisterPage from "@/pages/auth/RegisterPage";
+import DashboardPage from "@/pages/dashboard/DashboardPage";
 import AboutPage from "@/pages/public/AboutPage";
 import AgentPendingPage from "@/pages/public/AgentPendingPage";
 import ContractPage from "@/pages/public/ContractPage";
@@ -40,6 +42,30 @@ export const router = createBrowserRouter([
                 path: "faq",
                 Component: FAQPage
             },
+        ]
+    },
+    {
+        path: "/user",
+        Component: DashboardLayout,
+        children: [
+            {
+                index: true,
+                Component: DashboardPage
+            }
+        ]
+    },
+    {
+        path: "/admin",
+        Component: DashboardLayout,
+        children: [
+
+        ]
+    },
+    {
+        path: "/agent",
+        Component: DashboardLayout,
+        children: [
+
         ]
     },
     {
