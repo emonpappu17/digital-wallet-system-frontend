@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/popover"
 import { Link, NavLink } from "react-router"
 import { ModeToggle } from "./ModeToggle"
-import { useUserProfileQuery } from "@/redux/features/authApi"
+import { authApi, useLogoutMutation, useUserProfileQuery } from "@/redux/features/authApi"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
     DropdownMenu,
@@ -22,10 +22,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LogOut, Settings } from "lucide-react"
-// import { Link, NavLink } from "react-router-dom"
+import { LogOut, Settings, User } from "lucide-react"
+import { useAppDispatch } from "@/redux/hook"
 
-// Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
     { to: "/", label: "Home" },
     { to: "/about", label: "About" },
@@ -37,7 +36,14 @@ const navigationLinks = [
 
 export default function Navbar() {
     const { data, isLoading } = useUserProfileQuery(undefined);
+    const [logout] = useLogoutMutation();
+    const dispatch = useAppDispatch();
     console.log('user profile==>', data);
+
+    const handleLogout = async () => {
+        await logout(undefined)
+        dispatch(authApi.util.resetApiState())
+    }
     return (
         <header className="border-b px-4 md:px-6">
             <div className="flex h-16 items-center justify-between gap-4 container mx-auto">
@@ -139,10 +145,10 @@ export default function Navbar() {
                     {
                         data?.data?.email ?
                             <DropdownMenu >
-                                <DropdownMenuTrigger asChild>
+                                <DropdownMenuTrigger asChild className="size-9">
                                     <Avatar>
                                         <AvatarImage src={data?.data?.photo} />
-                                        <AvatarFallback>CN</AvatarFallback>
+                                        <AvatarFallback><User></User></AvatarFallback>
                                     </Avatar>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="mt-1">
@@ -152,12 +158,12 @@ export default function Navbar() {
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
-                                        <Settings className="mr-2 h-4 w-4" />
+                                        <Settings className="mr-1 h-4 w-4" />
                                         Profile Settings
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <LogOut className="mr-2 h-4 w-4" />
-                                        Log out
+                                    <DropdownMenuItem onClick={handleLogout}>
+                                        <LogOut className="mr-1 h-4 w-4" />
+                                        Logout
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
