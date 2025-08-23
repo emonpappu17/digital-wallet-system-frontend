@@ -92,6 +92,7 @@ import { toast } from "sonner"
 import { motion } from "framer-motion"
 
 import z from "zod"
+import { IRole } from "@/types"
 
 
 // ✅ Schema for login: accept either email OR phone number
@@ -142,9 +143,24 @@ export function LoginForm({
 
             const payload = isEmail ? { email: identifier, password } : { phoneNumber: identifier, password }
 
-            await login(payload).unwrap();
-            toast.success("Logged in Successful!!")
-            navigate("/")
+            const res = await login(payload).unwrap();
+
+            if (res?.data?.user?.role === IRole.AGENT) {
+                navigate("/agent/cash-in")
+                toast.success("Welcome to Agent Dashboard")
+            }
+            if (res?.data?.user?.role === IRole.USER) {
+                navigate("/user/deposit")
+                toast.success("Welcome to User Dashboard")
+            }
+            if (res?.data?.user?.role === IRole.ADMIN) {
+                navigate("/admin/users")
+                toast.success("Welcome to Admin Dashboard")
+            }
+
+            console.log('res login==>', res);
+            // toast.success("Logged in Successful!!")
+            // navigate("/")
         } catch (err: any) {
             console.error("Login failed", err);
             toast.error(err?.data.message || "Login failed. Try again.");
