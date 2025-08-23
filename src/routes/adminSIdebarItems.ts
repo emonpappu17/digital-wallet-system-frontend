@@ -1,5 +1,5 @@
-import CashInPage from '@/pages/dashboard/agent/CashInPage';
-import CashOutPage from '@/pages/dashboard/agent/CashOutPage';
+import AgentsPage from '@/pages/dashboard/admin/AgentsPage';
+import UsersPage from '@/pages/dashboard/admin/UsersPage';
 import { ISidebarItem } from '@/types';
 
 import {
@@ -12,12 +12,12 @@ export const adminSidebarItems: ISidebarItem[] = [
         title: "Users",
         url: "/admin/users",
         icon: Users,
-        component: CashInPage
+        component: UsersPage
     },
     {
         title: "Agents",
         url: "/admin/agents",
         icon: UserCheck,
-        component: CashOutPage
+        component: AgentsPage
     },
 ]

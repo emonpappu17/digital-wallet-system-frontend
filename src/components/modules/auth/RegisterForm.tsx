@@ -250,9 +250,12 @@ const registerSchema = z
         phone: z
             .string()
             .nonempty("Phone number is required")
-            .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-                message:
-                    "Phone must be Bangladeshi format: +8801XXXXXXXXX or 01XXXXXXXXX",
+            // .regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+            //     message:
+            //         "Phone must be Bangladeshi format: +8801XXXXXXXXX or 01XXXXXXXXX",
+            // }),
+            .regex(/^01\d{9}$/, {
+                message: "Phone must be Bangladeshi format: 01XXXXXXXXX",
             }),
         password: z
             .string()
@@ -414,7 +417,8 @@ const RegisterForm = ({
                                         <FormItem>
                                             <FormLabel>Phone Number</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="+8801XXXXXXXXX or 01XXXXXXXXX" {...field} />
+                                                <Input placeholder="01XXXXXXXXX"
+                                                    {...field} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
