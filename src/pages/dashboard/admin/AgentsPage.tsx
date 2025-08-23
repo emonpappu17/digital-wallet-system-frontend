@@ -617,7 +617,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useApproveAgentMutation, useGetAllAgentsQuery } from "@/redux/features/userApi";
+import { useApproveAgentMutation, useGetAllAgentsQuery, useSuspendAgentMutation } from "@/redux/features/userApi";
 import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
 import { motion } from "framer-motion";
@@ -873,6 +873,7 @@ export default function AgentsPage() {
     // API Call
     const { data: apiAgents, isLoading } = useGetAllAgentsQuery(undefined);
     const [approveAgent] = useApproveAgentMutation();
+    const [suspendAgent] = useSuspendAgentMutation();
 
     console.log('apiAgents==>', apiAgents);
 
@@ -968,30 +969,52 @@ export default function AgentsPage() {
         }
     };
 
-    const suspendAgent = async (agentId: string) => {
-        setLoading(true);
+    const handleSuspend = async (agentId: string | undefined) => {
+        console.log("hit ==>", agentId);
+        // setLoading(true);
+        const toastId = toast.loading("Suspending Agent...")
         try {
-            const a = agents.find((x) => x.id === agentId);
-            if (!a) throw new Error("Agent not found");
+            // const a = agents.find((x) => x.id === agentId);
+            // if (!a) throw new Error("Agent not found");
 
-            await simulateNetwork(true, 900);
-            setAgents((prev) =>
-                prev.map((p) => (p.id === agentId ? { ...p, status: "suspended", reason: reason || "Suspended by admin" } : p))
-            );
-            toasts.success(`Agent ${a.name} suspended`);
+            // // simulate API
+            // await simulateNetwork(true, 900);
+            // setAgents((prev) => prev.map((p) => (p.id === agentId ? { ...p, status: "active" } : p)));
+            console.log("inside=>", agentId);
+            const res = await suspendAgent(agentId).unwrap();
+
+            console.log('suspend res==>', res);
+            toast.success(`Agent suspend successfully`, { id: toastId });
         } catch (err: any) {
-            toasts.error(err?.message || "Failed to suspend");
-        } finally {
-            setLoading(false);
-            setConfirmDialog({ type: null, agent: null });
-            setSuspendReason("");
-            // close modal if it referred to this agent
-            if (selectedAgent?.id === agentId) {
-                setModalOpen(false);
-                setSelectedAgent(null);
-            }
+            console.log(err);
+            toast.error(err?.data?.message || "Failed to approve", { id: toastId });
         }
     };
+
+    // const suspendAgent = async (agentId: string) => {
+    //     setLoading(true);
+    //     try {
+    //         const a = agents.find((x) => x.id === agentId);
+    //         if (!a) throw new Error("Agent not found");
+
+    //         await simulateNetwork(true, 900);
+    //         setAgents((prev) =>
+    //             prev.map((p) => (p.id === agentId ? { ...p, status: "suspended", reason: reason || "Suspended by admin" } : p))
+    //         );
+    //         toasts.success(`Agent ${a.name} suspended`);
+    //     } catch (err: any) {
+    //         toasts.error(err?.message || "Failed to suspend");
+    //     } finally {
+    //         setLoading(false);
+    //         setConfirmDialog({ type: null, agent: null });
+    //         setSuspendReason("");
+    //         // close modal if it referred to this agent
+    //         if (selectedAgent?.id === agentId) {
+    //             setModalOpen(false);
+    //             setSelectedAgent(null);
+    //         }
+    //     }
+    // };
 
     // UI helpers
     const openDetails = (agent: Agent) => {
@@ -1266,10 +1289,20 @@ export default function AgentsPage() {
                                                 />
                                             )}
                                             {agent.status !== Status.SUSPEND && agent.status !== Status.REJECTED && (
-                                                <Button size="sm" variant="destructive"
-                                                    onClick={() => ('')} title="Suspend">
-                                                    <XCircle className="h-4 w-4 text-white" />
-                                                </Button>
+                                                // <Button size="sm" variant="destructive"
+                                                //     onClick={() => ('')} title="Suspend">
+                                                //     <XCircle className="h-4 w-4 text-white" />
+                                                // </Button>
+
+                                                <ActionButtonWithConfirm
+                                                    icon={<XCircle className="h-4 w-4 text-white" />}
+                                                    title="Suspend"
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    dialogTitle="Are you absolutely sure?"
+                                                    dialogDescription={`Are you sure you want to suspend ${agent?.name}? They will become an suspend agent and can not paly some action.`}
+                                                    onConfirm={() => handleSuspend(agent._id)}
+                                                />
                                             )}
                                             <Button size="sm" variant="ghost" onClick={() => ('')} title="View">
                                                 <Eye className="h-4 w-4 text-white" />

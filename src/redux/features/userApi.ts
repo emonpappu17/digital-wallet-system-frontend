@@ -10,6 +10,14 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["USER"]
         }),
+        suspendAgent: builder.mutation({
+            query: (agentId) => ({
+                url: `/agent-requests/${agentId}/suspend`,
+                method: "PATCH",
+                // data: agentInfo
+            }),
+            invalidatesTags: ["USER"]
+        }),
         getAllAgents: builder.query({
             query: () => ({
                 url: "/admin/agents",
@@ -20,4 +28,4 @@ export const userApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useGetAllAgentsQuery, useApproveAgentMutation } = userApi;
+export const { useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation } = userApi;
