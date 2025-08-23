@@ -32,6 +32,7 @@ const navigationLinks = [
     { to: "/pricing", label: "Pricing" },
     { to: "/contact", label: "Contact" },
     { to: "/faq", label: "FAQ" },
+    { to: "/user", label: "Dashboard" },
 ]
 
 export default function Navbar() {
