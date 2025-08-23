@@ -10,7 +10,11 @@ import FAQPage from "@/pages/public/FAQPage";
 import FeaturesPage from "@/pages/public/FeaturesPage";
 import HomePage from "@/pages/public/HomePage";
 import PricingPage from "@/pages/public/PricingPage";
+import { generateRoutes } from "@/utils/genarateRoutes";
 import { createBrowserRouter } from "react-router";
+import { userSidebarItems } from "./userSidebarItems";
+import { agentSidebarItems } from "./agentSidebarItems";
+import { adminSidebarItems } from "./adminSIdebarItems";
 
 
 export const router = createBrowserRouter([
@@ -51,21 +55,22 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 Component: DashboardPage
-            }
+            },
+            ...generateRoutes(userSidebarItems)
         ]
     },
     {
         path: "/admin",
         Component: DashboardLayout,
         children: [
-
+            ...generateRoutes(adminSidebarItems)
         ]
     },
     {
         path: "/agent",
         Component: DashboardLayout,
         children: [
-
+            ...generateRoutes(agentSidebarItems)
         ]
     },
     {

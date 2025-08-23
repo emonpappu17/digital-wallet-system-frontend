@@ -149,7 +149,12 @@ export default function Navbar() {
                                 <DropdownMenuTrigger asChild className="size-9">
                                     <Avatar>
                                         <AvatarImage src={data?.data?.photo} />
-                                        <AvatarFallback><User></User></AvatarFallback>
+                                        <AvatarFallback>
+                                            {/* <User></User> */}
+                                            <span className="text-xs select-none">
+                                                {data?.data?.name ? data.data.name.slice(0, 2).toUpperCase() : <User></User>}
+                                            </span>
+                                        </AvatarFallback>
                                     </Avatar>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="mt-1">

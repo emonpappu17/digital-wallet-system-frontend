@@ -39,6 +39,8 @@ import {
 import { DropdownMenu } from "./ui/dropdown-menu"
 import { Link, NavLink, useLocation } from "react-router"
 import { cn } from "@/lib/utils"
+import { Separator } from "./ui/separator"
+import { getSidebarItems } from "@/utils/getSidebarItems"
 
 // This is sample data.
 // const data = {
@@ -172,38 +174,40 @@ import { cn } from "@/lib/utils"
 // }
 
 // Menu items.
-const items = [
-  {
-    title: "Home",
-    url: "/user",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "/",
-    // icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "",
-    // icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    // icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    // icon: Settings,
-  },
-]
+// const items = [
+//   {
+//     title: "Home",
+//     url: "/user",
+//     icon: Home,
+//   },
+//   {
+//     title: "Inbox",
+//     url: "/",
+//     // icon: Inbox,
+//   },
+//   {
+//     title: "Calendar",
+//     url: "",
+//     // icon: Calendar,
+//   },
+//   {
+//     title: "Search",
+//     url: "#",
+//     // icon: Search,
+//   },
+//   {
+//     title: "Settings",
+//     url: "#",
+//     // icon: Settings,
+//   },
+// ]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation().pathname;
-  console.log('location=>', location);
+  // console.log('location=>', location);
   const { data: profile, isLoading } = useUserProfileQuery(undefined);
+  console.log(profile?.data?.role);
+  const items = getSidebarItems(profile?.data?.role)
 
   return (
     // <Sidebar {...props}>
@@ -359,13 +363,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <Logo></Logo>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-3 ">
+            <SidebarMenu className="space-y-2">
               {items.map((item) => (
                 <SidebarMenuItem key={item.title} >
-                  <SidebarMenuButton asChild isActive={location === item.url} className={` px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 
+                  <SidebarMenuButton asChild isActive={location === item.url} className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 
                      ${location === item.url ?
                       "!text-primary bg-primary/10 dark:bg-primary/20" :
                       "text-muted-foreground hover:text-primary hover:bg-muted/30"}`}>
@@ -373,27 +377,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       to={item.url}
                       className="py-5 "
                     >
-                      <Home></Home>
-                      Dashboard
+                      <item.icon className="size-4"></item.icon>
+                      {item.title}
                     </Link>
                   </SidebarMenuButton>
-
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <Separator></Separator>
       <SidebarFooter>
         <div>
           <SidebarMenuButton
             size="lg"
             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
           >
-
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarImage src={profile?.data?.photo} />
-              <AvatarFallback><User></User></AvatarFallback>
+              <AvatarFallback>
+                <span className="text-xs select-none">
+                  {profile?.data?.name ? profile.data.name.slice(0, 2).toUpperCase() : <User></User>}
+                </span>
+              </AvatarFallback>
             </Avatar>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-medium">{profile?.data?.name}</span>
