@@ -2,14 +2,14 @@ import { baseApi } from "../baseApi";
 
 export const userApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        // mutation: builder.mutation({
-        //     query: (agentInfo) => ({
-        //         url: "/agent-requests",
-        //         method: "POST",
-        //         data: agentInfo
-        //     }),
-        //     invalidatesTags: ["USER"]
-        // }),
+        approveAgent: builder.mutation({
+            query: (agentId) => ({
+                url: `/agent-requests/${agentId}/approve`,
+                method: "PATCH",
+                // data: agentInfo
+            }),
+            invalidatesTags: ["USER"]
+        }),
         getAllAgents: builder.query({
             query: () => ({
                 url: "/admin/agents",
@@ -20,4 +20,4 @@ export const userApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useGetAllAgentsQuery } = userApi;
+export const { useGetAllAgentsQuery, useApproveAgentMutation } = userApi;

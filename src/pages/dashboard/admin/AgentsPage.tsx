@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // // const AgentsPage = () => {
 // //     return (
@@ -616,7 +617,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { useGetAllAgentsQuery } from "@/redux/features/userApi";
+import { useApproveAgentMutation, useGetAllAgentsQuery } from "@/redux/features/userApi";
 import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
 import { motion } from "framer-motion";
@@ -629,6 +630,19 @@ import {
     XCircle,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { ActionButtonWithConfirm } from "@/components/ui/ConfirmButton";
 
 type AgentStatus = "pending" | "active" | "suspended" | "rejected";
 
@@ -858,6 +872,7 @@ export default function AgentsPage() {
 
     // API Call
     const { data: apiAgents, isLoading } = useGetAllAgentsQuery(undefined);
+    const [approveAgent] = useApproveAgentMutation();
 
     console.log('apiAgents==>', apiAgents);
 
@@ -875,7 +890,7 @@ export default function AgentsPage() {
     // modal / dialog states
     const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
-    const [confirmDialog, setConfirmDialog] = useState<{ type: "approve" | "suspend" | null; agent: Agent | null }>({
+    const [confirmDialog, setConfirmDialog] = useState<{ type: "approve" | "suspend" | null; agent: TUser | null }>({
         type: null,
         agent: null,
     });
@@ -931,30 +946,29 @@ export default function AgentsPage() {
     }, [filtered, page, perPage]);
 
     // Admin actions (simulate API)
-    const approveAgent = async (agentId: string) => {
-        setLoading(true);
+    const handleApprove = async (agentId: string | undefined) => {
+        console.log("hit ==>", agentId);
+        // setLoading(true);
+        const toastId = toast.loading("Approving Agent...")
         try {
-            const a = agents.find((x) => x.id === agentId);
-            if (!a) throw new Error("Agent not found");
+            // const a = agents.find((x) => x.id === agentId);
+            // if (!a) throw new Error("Agent not found");
 
-            // simulate API
-            await simulateNetwork(true, 900);
-            setAgents((prev) => prev.map((p) => (p.id === agentId ? { ...p, status: "active" } : p)));
-            toasts.success(`Agent ${a.name} approved`);
+            // // simulate API
+            // await simulateNetwork(true, 900);
+            // setAgents((prev) => prev.map((p) => (p.id === agentId ? { ...p, status: "active" } : p)));
+            console.log("inside=>", agentId);
+            const res = await approveAgent(agentId).unwrap();
+
+            console.log('approve res==>', res);
+            toast.success(`Agent approved successfully`, { id: toastId });
         } catch (err: any) {
-            toasts.error(err?.message || "Failed to approve");
-        } finally {
-            setLoading(false);
-            setConfirmDialog({ type: null, agent: null });
-            // also close modal if open and selected agent was approved
-            if (selectedAgent?.id === agentId) {
-                setModalOpen(false);
-                setSelectedAgent(null);
-            }
+            console.log(err);
+            toast.error(err?.data?.message || "Failed to approve", { id: toastId });
         }
     };
 
-    const suspendAgent = async (agentId: string, reason?: string) => {
+    const suspendAgent = async (agentId: string) => {
         setLoading(true);
         try {
             const a = agents.find((x) => x.id === agentId);
@@ -1207,11 +1221,49 @@ export default function AgentsPage() {
                                     <TableCell className="text-right">
                                         <div className="flex items-center justify-end gap-2">
                                             {agent.status === Status.PENDING && (
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() => ('')} title="Approve">
-                                                    <CheckCircle className="h-4 w-4 text-white " />
-                                                </Button>
+                                                // <Button
+                                                //     size="sm"
+                                                //     onClick={() => handleApprove(agent._id)}
+
+                                                //     title="Approve"
+                                                // // onClick={() => setConfirmDialog({ type: "approve", agent })}
+
+                                                // >
+                                                //     <CheckCircle className="h-4 w-4 text-white " />
+                                                // </Button>
+
+                                                // <AlertDialog>
+                                                //     <AlertDialogTrigger asChild>
+                                                //         <Button
+                                                //             size="sm"
+                                                //             // title="Approve"
+                                                //         >
+                                                //             <CheckCircle className="h-4 w-4 text-white " />
+                                                //         </Button>
+                                                //     </AlertDialogTrigger>
+                                                //     <AlertDialogContent>
+                                                //         <AlertDialogHeader>
+                                                //             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                                //             <AlertDialogDescription>
+                                                //                 This will approve to agent
+                                                //                 account and remove your data from our servers.
+                                                //             </AlertDialogDescription>
+                                                //         </AlertDialogHeader>
+                                                //         <AlertDialogFooter>
+                                                //             <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                //             <AlertDialogAction onClick={() => handleApprove(agent._id)} className="text-white">Continue</AlertDialogAction>
+                                                //         </AlertDialogFooter>
+                                                //     </AlertDialogContent>
+                                                // </AlertDialog>
+
+                                                // Usage example in your component
+                                                <ActionButtonWithConfirm
+                                                    icon={<CheckCircle className="h-4 w-4 text-white" />}
+                                                    title="Approve"
+                                                    dialogTitle="Are you absolutely sure?"
+                                                    dialogDescription={`Are you sure you want to approve ${agent?.name}? They will become an active agent and gain access to the agent dashboard.`}
+                                                    onConfirm={() => handleApprove(agent._id)}
+                                                />
                                             )}
                                             {agent.status !== Status.SUSPEND && agent.status !== Status.REJECTED && (
                                                 <Button size="sm" variant="destructive"
@@ -1224,7 +1276,7 @@ export default function AgentsPage() {
                                             </Button>
                                         </div>
 
-                                
+
                                     </TableCell>
                                 </TableRow>
                             ))}
