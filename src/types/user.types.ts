@@ -18,6 +18,16 @@ export interface TUser {
     shopName?: string;
     role: IRole;
     status: Status;
+    transactionVolume?: number
+    transactionsCount?: number,
+    commission?: number,
+    transactions?: {
+        agentCommission: number,
+        amount: number,
+        createdAt: string,
+        _id: string
+    }[],
+    balance?: number,
     createdAt: string;
     updatedAt: string;
 }
