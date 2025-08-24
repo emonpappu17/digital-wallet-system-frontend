@@ -359,11 +359,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     //   </SidebarFooter>
     // </Sidebar>
 
-    <Sidebar {...props}>
+    <Sidebar {...props} >
       <SidebarHeader>
         <Logo></Logo>
       </SidebarHeader>
-      <SidebarContent className="">
+      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-2">

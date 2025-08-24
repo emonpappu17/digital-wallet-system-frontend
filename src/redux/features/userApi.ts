@@ -19,9 +19,10 @@ export const userApi = baseApi.injectEndpoints({
             invalidatesTags: ["USER"]
         }),
         getAllAgents: builder.query({
-            query: () => ({
+            query: (params) => ({
                 url: "/admin/agents",
-                method: "GET"
+                method: "GET",
+                params
             }),
             providesTags: ['USER']
         })

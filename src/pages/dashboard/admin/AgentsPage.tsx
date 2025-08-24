@@ -11,9 +11,11 @@ import {
 } from "@/components/ui/card";
 import { ActionButtonWithConfirm } from "@/components/ui/ConfirmButton";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserDetailsModal } from "@/components/ui/UserDetailsModal";
+import { usePagination } from "@/hooks/use-pagination";
 import { openModal } from "@/redux/features/modalSlice";
 import { useApproveAgentMutation, useGetAllAgentsQuery, useSuspendAgentMutation } from "@/redux/features/userApi";
 import { useAppDispatch } from "@/redux/hook";
@@ -185,11 +187,25 @@ const formatDate = (iso?: string) =>
 
 export default function AgentsPage() {
     const dispatch = useAppDispatch();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit, setLimit] = useState(5);
+    const paginationItemsToDisplay = 4;
 
     // API Call
-    const { data: apiAgents } = useGetAllAgentsQuery(undefined);
+    const { data } = useGetAllAgentsQuery({ limit, page: currentPage });
     const [approveAgent] = useApproveAgentMutation();
     const [suspendAgent] = useSuspendAgentMutation();
+
+    // const totalPages = data?.meta?.totalPage || 1;
+    const totalPages = data?.data?.pagination?.totalPages || 1;
+
+    const { pages, showLeftEllipsis, showRightEllipsis } = usePagination({
+        currentPage,
+        totalPages,
+        paginationItemsToDisplay,
+    });
+
+    const apiAgents = data?.data?.agents
 
     console.log('apiAgents==>', apiAgents);
 
@@ -282,7 +298,7 @@ export default function AgentsPage() {
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="bg-blue-50 dark:bg-blue-900/40 rounded-lg p-4">
                                 <div className="text-xs text-muted-foreground">Total Agents</div>
-                                <div className="mt-1 text-2xl font-semibold text-blue-900 dark:text-white">{apiAgents?.data.length}</div>
+                                <div className="mt-1 text-2xl font-semibold text-blue-900 dark:text-white">{apiAgents?.length}</div>
                             </div>
                             <div className="bg-yellow-50 dark:bg-yellow-900/10 rounded-lg p-4">
                                 <div className="text-xs text-muted-foreground">Pending</div>
@@ -436,7 +452,7 @@ export default function AgentsPage() {
                             ))}
                              */}
 
-                            {apiAgents?.data?.map((agent: TUser) => (
+                            {apiAgents?.map((agent: TUser) => (
                                 <TableRow key={agent._id} className="hover:bg-muted/5">
                                     <TableCell>
                                         <div className="flex items-center gap-3">
@@ -524,6 +540,94 @@ export default function AgentsPage() {
                     </Table>
                 </CardContent>
             </Card>
+
+
+            <div className=" mt-4 ">
+                <div className="flex justify-between items-center">
+                    {/* Results per page */}
+                    <div className="flex items-center gap-3 ">
+                        <Select
+                            defaultValue={String(limit)}
+                            onValueChange={(value) => {
+                                setLimit(Number(value));
+                                setCurrentPage(1); // reset to first page when limit changes
+                            }}
+                            aria-label="Results per page"
+                        >
+                            <SelectTrigger
+                                id="results-per-page"
+                                className="w-fit whitespace-nowrap"
+                            >
+                                <SelectValue placeholder="Select number of results" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {[5, 10, 15, 20].map((pageSize) => (
+                                    <SelectItem key={pageSize} value={pageSize.toString()}>
+                                        {pageSize} / page
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <div>
+                        <Pagination>
+                            <PaginationContent>
+                                {/* Previous page button */}
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50"
+                                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                        aria-disabled={currentPage === 1 ? true : undefined}
+                                        role={currentPage === 1 ? "link" : undefined}
+                                    />
+                                </PaginationItem>
+
+                                {/* Left ellipsis (...) */}
+                                {showLeftEllipsis && (
+                                    <PaginationItem>
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
+                                )}
+
+                                {/* Page number links */}
+                                {pages.map((page) => (
+                                    <PaginationItem
+                                        key={page}
+                                        onClick={() => setCurrentPage(page)}
+                                    >
+                                        <PaginationLink
+                                            isActive={currentPage === page}
+                                        >
+                                            {page}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+
+                                {/* Right ellipsis (...) */}
+                                {showRightEllipsis && (
+                                    <PaginationItem>
+                                        <PaginationEllipsis />
+                                    </PaginationItem>
+                                )}
+
+                                {/* Next page button */}
+                                <PaginationItem>
+                                    <PaginationNext
+                                        className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer "
+                                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                        aria-disabled={currentPage === totalPages ? true : undefined}
+                                        role={currentPage === totalPages ? "link" : undefined}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </div>
+                </div>
+            </div>
+
+
+
 
             {/* Agent Details Modal (replaces Drawer) */}
             {/* <AgentDetailsModal
