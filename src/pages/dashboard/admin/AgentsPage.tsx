@@ -1243,57 +1243,16 @@ export default function AgentsPage() {
 
                                     <TableCell className="text-right">
                                         <div className="flex items-center justify-end gap-2">
-                                            {agent.status === Status.PENDING && (
-                                                // <Button
-                                                //     size="sm"
-                                                //     onClick={() => handleApprove(agent._id)}
-
-                                                //     title="Approve"
-                                                // // onClick={() => setConfirmDialog({ type: "approve", agent })}
-
-                                                // >
-                                                //     <CheckCircle className="h-4 w-4 text-white " />
-                                                // </Button>
-
-                                                // <AlertDialog>
-                                                //     <AlertDialogTrigger asChild>
-                                                //         <Button
-                                                //             size="sm"
-                                                //             // title="Approve"
-                                                //         >
-                                                //             <CheckCircle className="h-4 w-4 text-white " />
-                                                //         </Button>
-                                                //     </AlertDialogTrigger>
-                                                //     <AlertDialogContent>
-                                                //         <AlertDialogHeader>
-                                                //             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                                                //             <AlertDialogDescription>
-                                                //                 This will approve to agent
-                                                //                 account and remove your data from our servers.
-                                                //             </AlertDialogDescription>
-                                                //         </AlertDialogHeader>
-                                                //         <AlertDialogFooter>
-                                                //             <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                //             <AlertDialogAction onClick={() => handleApprove(agent._id)} className="text-white">Continue</AlertDialogAction>
-                                                //         </AlertDialogFooter>
-                                                //     </AlertDialogContent>
-                                                // </AlertDialog>
-
-                                                // Usage example in your component
+                                            {(agent.status === Status.PENDING || agent.status === Status.SUSPEND) && (
                                                 <ActionButtonWithConfirm
                                                     icon={<CheckCircle className="h-4 w-4 text-white" />}
                                                     title="Approve"
                                                     dialogTitle="Are you absolutely sure?"
-                                                    dialogDescription={`Are you sure you want to approve ${agent?.name}? They will become an active agent and gain access to the agent dashboard.`}
+                                                    dialogDescription={`Are you sure you want to approve ${agent?.name}? They will become an active agent and gain access to the agent dashboard all activities.`}
                                                     onConfirm={() => handleApprove(agent._id)}
                                                 />
                                             )}
                                             {agent.status !== Status.SUSPEND && agent.status !== Status.REJECTED && (
-                                                // <Button size="sm" variant="destructive"
-                                                //     onClick={() => ('')} title="Suspend">
-                                                //     <XCircle className="h-4 w-4 text-white" />
-                                                // </Button>
-
                                                 <ActionButtonWithConfirm
                                                     icon={<XCircle className="h-4 w-4 text-white" />}
                                                     title="Suspend"
@@ -1304,8 +1263,8 @@ export default function AgentsPage() {
                                                     onConfirm={() => handleSuspend(agent._id)}
                                                 />
                                             )}
-                                            <Button size="sm" variant="ghost" onClick={() => ('')} title="View">
-                                                <Eye className="h-4 w-4 text-white" />
+                                            <Button size="sm" variant="outline" onClick={() => ('')} title="View">
+                                                <Eye className="h-4 w-4 " />
                                             </Button>
                                         </div>
 
