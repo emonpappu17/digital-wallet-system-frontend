@@ -10,11 +10,15 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { ActionButtonWithConfirm } from "@/components/ui/ConfirmButton";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ErrorState } from "@/components/ui/ErrorState";
 import { Input } from "@/components/ui/input";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { StatCardSkeleton } from "@/components/ui/StatCardSkeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { TableRowSkeleton } from "@/components/ui/TableRowSkeleton";
 import { UserDetailsModal } from "@/components/ui/UserDetailsModal";
 import { usePagination } from "@/hooks/use-pagination";
 import { cn } from "@/lib/utils";
@@ -25,11 +29,9 @@ import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
 import { motion } from "framer-motion";
 import {
-    AlertTriangle,
     CheckCircle,
     CircleXIcon,
     Eye,
-    RefreshCw,
     Search,
     XCircle
 } from "lucide-react";
@@ -42,97 +44,13 @@ type AgentStatus = "PENDING" | "ACTIVE" | "SUSPEND";
 const formatDate = (iso?: string) =>
     iso ? new Date(iso).toLocaleDateString() + " " + new Date(iso).toLocaleTimeString() : "-";
 
-// Skeleton Components
-const StatCardSkeleton = () => (
-    <div className="bg-gray-50 dark:bg-gray-900/40 rounded-lg p-4">
-        <Skeleton className="h-3 w-16 mb-2" />
-        <Skeleton className="h-8 w-12" />
-    </div>
-);
-
-const TableRowSkeleton = () => (
-    <TableRow>
-        <TableCell>
-            <div className="flex items-center gap-3">
-                <Skeleton className="h-9 w-9 rounded-full" />
-                <div className="flex flex-col gap-1">
-                    <Skeleton className="h-4 w-24" />
-                    <Skeleton className="h-3 w-20" />
-                </div>
-            </div>
-        </TableCell>
-        <TableCell><Skeleton className="h-4 w-20" /></TableCell>
-        <TableCell><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
-        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
-        <TableCell><Skeleton className="h-4 w-8" /></TableCell>
-        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
-        <TableCell className="text-right">
-            <div className="flex items-center justify-end gap-2">
-                <Skeleton className="h-8 w-20" />
-                <Skeleton className="h-8 w-20" />
-                <Skeleton className="h-8 w-10" />
-            </div>
-        </TableCell>
-    </TableRow>
-);
-
-const ErrorState = ({ error, onRetry }: { error: any; onRetry: () => void }) => (
-    <Card className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10">
-        <CardContent className="p-6">
-            <div className="flex items-center justify-center text-center">
-                <div className="space-y-4">
-                    <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
-                    <div>
-                        <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">
-                            Failed to Load Agents
-                        </h3>
-                        <p className="text-sm text-red-700 dark:text-red-200 mt-1">
-                            {error?.data?.message || error?.message || "Something went wrong while fetching agents data."}
-                        </p>
-                    </div>
-                    <Button
-                        onClick={onRetry}
-                        variant="outline"
-                        className="border-red-300 text-red-700 hover:bg-red-100 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900/20"
-                    >
-                        <RefreshCw className="h-4 w-4 mr-2" />
-                        Try Again
-                    </Button>
-                </div>
-            </div>
-        </CardContent>
-    </Card>
-);
-
-const EmptyState = () => (
-    <Card className="border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/10">
-        <CardContent className="p-12">
-            <div className="flex items-center justify-center text-center">
-                <div className="space-y-4">
-                    <div className="h-12 w-12 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
-                        <Search className="h-6 w-6 text-gray-500" />
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                            No Agents Found
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                            Try adjusting your search criteria or filters.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </CardContent>
-    </Card>
-);
-
 export default function AgentsPage() {
     const dispatch = useAppDispatch();
 
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<AgentStatus | "">("");
     const [minCommission, setMinCommission] = useState<number | "">("");
+
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const paginationItemsToDisplay = 4;
@@ -200,7 +118,7 @@ export default function AgentsPage() {
         return (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-2 md:p-4">
                 <ErrorState error={error} onRetry={handleRetry} />
-                <UserDetailsModal />
+                {/* <UserDetailsModal /> */}
             </motion.div>
         );
     }
@@ -274,7 +192,7 @@ export default function AgentsPage() {
                                     className={cn("peer w-full ps-9")}
                                     value={search}
                                     onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
-                                    placeholder="Filter by name, email or phone number..."
+                                    placeholder="Search by name, email or phone number..."
                                     disabled={isLoading}
                                 />
                                 <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3">
