@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserDetailsModal } from "@/components/ui/UserDetailsModal";
 import { usePagination } from "@/hooks/use-pagination";
+import { cn } from "@/lib/utils";
 import { openModal } from "@/redux/features/modalSlice";
 import { useApproveAgentMutation, useGetAllAgentsQuery, useSuspendAgentMutation } from "@/redux/features/userApi";
 import { useAppDispatch } from "@/redux/hook";
@@ -24,7 +25,9 @@ import { Status } from "@/types/user.types";
 import { motion } from "framer-motion";
 import {
     CheckCircle,
+    CircleXIcon,
     Eye,
+    ListFilterIcon,
     Search,
     XCircle
 } from "lucide-react";
@@ -187,12 +190,13 @@ const formatDate = (iso?: string) =>
 
 export default function AgentsPage() {
     const dispatch = useAppDispatch();
+    const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const paginationItemsToDisplay = 4;
 
     // API Call
-    const { data } = useGetAllAgentsQuery({ limit, page: currentPage });
+    const { data } = useGetAllAgentsQuery({ limit, page: currentPage, search: search });
     const [approveAgent] = useApproveAgentMutation();
     const [suspendAgent] = useSuspendAgentMutation();
 
@@ -210,7 +214,6 @@ export default function AgentsPage() {
     console.log('apiAgents==>', apiAgents);
 
     // filters & state
-    const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<AgentStatus | "all">("all");
     const [minCommission, setMinCommission] = useState<number | "">("");
 
@@ -329,14 +332,39 @@ export default function AgentsPage() {
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
-                            <div className="flex items-center gap-2">
+                            {/* <div className="flex items-center gap-2">
                                 <Search className="h-4 w-4 text-muted-foreground" />
                                 <Input placeholder="Search by name / phone / shop / email" value={search}
-                                // onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                                    onChange={(e) => { setSearch(e.target.value) }}
                                 />
+                            </div> */}
+
+                            <div className="relative">
+                                <Input
+                                    // id={`${id}-input`}
+                                    className={cn("peer w-full ps-9")}
+                                    value={search}
+                                    onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+                                    placeholder="Filter by name, email or phone number..."
+                                />
+                                <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3">
+                                    {/* <ListFilterIcon size={16} aria-hidden="true" /> */}
+                                    <Search className="h-4 w-4 text-muted-foreground" />
+                                </div>
+                                {search && (
+                                    <button
+                                        className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center"
+                                        aria-label="Clear filter"
+                                        onClick={() => {
+                                            setSearch("");
+                                        }}
+                                    >
+                                        <CircleXIcon size={16} />
+                                    </button>
+                                )}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-2 ">
                                 <Select value={statusFilter}
                                 // ={(v) => { setStatusFilter(v as any); setPage(1); }}
                                 >
@@ -359,7 +387,7 @@ export default function AgentsPage() {
 
                             <div className="flex items-center gap-2">
                                 <Button variant="ghost" onClick={() => { setSearch(""); setStatusFilter("all"); setMinCommission(""); }}>Reset</Button>
-                                <div className="ml-auto text-sm text-muted-foreground">Showing 234 results</div>
+                                <div className="ml-auto text-sm text-muted-foreground">Showing {apiAgents?.length} results</div>
                             </div>
                         </div>
                     </CardContent>
