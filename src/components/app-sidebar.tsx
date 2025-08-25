@@ -12,35 +12,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem
 } from "@/components/ui/sidebar"
-import { Home, User } from "lucide-react"
+import { User } from "lucide-react"
 
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import {
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from "@/components/ui/dropdown-menu"
 import { useUserProfileQuery } from "@/redux/features/authApi"
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react"
-import { DropdownMenu } from "./ui/dropdown-menu"
-import { Link, NavLink, useLocation } from "react-router"
-import { cn } from "@/lib/utils"
-import { Separator } from "./ui/separator"
 import { getSidebarItems } from "@/utils/getSidebarItems"
+import { Link, useLocation } from "react-router"
+import { Separator } from "./ui/separator"
 
 // This is sample data.
 // const data = {
