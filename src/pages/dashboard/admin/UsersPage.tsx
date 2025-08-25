@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -6,12 +7,13 @@ import { ActionButtonWithConfirm } from "@/components/ui/ConfirmButton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserDetailsModal } from "@/components/ui/UserDetailsModal";
 import { openModal } from "@/redux/features/modalSlice";
-import { useGetAllUsersQuery } from "@/redux/features/userApi";
+import { useBlockUserMutation, useGetAllUsersQuery, useUnblockUserMutation } from "@/redux/features/userApi";
 import { useAppDispatch } from "@/redux/hook";
 import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
 import { motion } from "framer-motion";
 import { CheckCircle, Eye, XCircle } from "lucide-react";
+import { toast } from "sonner";
 
 const formatDate = (iso?: string) =>
     iso ? new Date(iso).toLocaleDateString() + " " + new Date(iso).toLocaleTimeString() : "-";
@@ -21,6 +23,8 @@ const UsersPage = () => {
 
     //API Calls
     const { data, } = useGetAllUsersQuery({});
+    const [blockUser, { isLoading: isBlocking }] = useBlockUserMutation();
+    const [unblockUser, { isLoading: isUnblocking }] = useUnblockUserMutation();
 
     // const totalPages = data?.meta?.totalPages || 1;
     const apiUsers = data?.data?.users;
@@ -28,13 +32,26 @@ const UsersPage = () => {
 
     console.log(apiUsers);
 
-    const handleUnblock = (userId: string | undefined) => {
-        console.log(userId);
-        return
+    const handleUnblock = async (userId: string | undefined) => {
+        const toastId = toast.loading("Unblocking User...")
+        try {
+            await unblockUser(userId).unwrap();
+            toast.success(`User unblock successfully`, { id: toastId });
+        } catch (err: any) {
+            console.log(err);
+            toast.error(err?.data?.message || "Failed to unblock", { id: toastId });
+        }
     }
-    const handleBlock = (userId: string | undefined) => {
-        console.log(userId);
-        return
+
+    const handleBlock = async (userId: string | undefined) => {
+        const toastId = toast.loading("Blocking User...")
+        try {
+            await blockUser(userId).unwrap();
+            toast.success(`User blocked successfully`, { id: toastId });
+        } catch (err: any) {
+            console.log(err);
+            toast.error(err?.data?.message || "Failed to block", { id: toastId });
+        }
     }
     return (
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-2 md:p-4">
@@ -132,7 +149,7 @@ const UsersPage = () => {
                                                         dialogTitle="Are you absolutely sure?"
                                                         dialogDescription={`Are you sure you want to block ${user?.name}? They will become a block user and cannot perform some actions.`}
                                                         onConfirm={() => handleBlock(user._id)}
-                                                    // disabled={isApproving || isSuspending}
+                                                        disabled={isBlocking || isUnblocking}
                                                     />
                                                 )}
 
@@ -141,7 +158,7 @@ const UsersPage = () => {
                                                     variant="outline"
                                                     onClick={() => dispatch(openModal({ type: "user", data: user }))}
                                                     title="View"
-                                                // disabled={isApproving || isSuspending}
+                                                    disabled={isBlocking || isUnblocking}
                                                 >
                                                     <Eye className="h-4 w-4" />
                                                 </Button>

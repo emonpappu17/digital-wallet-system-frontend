@@ -11,6 +11,22 @@ export const userApi = baseApi.injectEndpoints({
             providesTags: ['USER']
         }),
 
+        blockUser: builder.mutation({
+            query: (userId) => ({
+                url: `/user/${userId}/block`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["USER"]
+        }),
+
+        unblockUser: builder.mutation({
+            query: (userId) => ({
+                url: `/user/${userId}/unblock`,
+                method: "PATCH",
+            }),
+            invalidatesTags: ["USER"]
+        }),
+
         approveAgent: builder.mutation({
             query: (agentId) => ({
                 url: `/agent-requests/${agentId}/approve`,
@@ -19,6 +35,7 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["USER"]
         }),
+
         suspendAgent: builder.mutation({
             query: (agentId) => ({
                 url: `/agent-requests/${agentId}/suspend`,
@@ -27,6 +44,7 @@ export const userApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["USER"]
         }),
+
         getAllAgents: builder.query({
             query: (params) => ({
                 url: "/admin/agents",
@@ -38,4 +56,4 @@ export const userApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useGetAllAgentsQuery, useGetAllUsersQuery, useApproveAgentMutation, useSuspendAgentMutation } = userApi;
+export const { useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation, useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation } = userApi;

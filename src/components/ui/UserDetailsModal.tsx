@@ -95,7 +95,7 @@ export function UserDetailsModal() {
 
                         <TabsContent value="transactions">
                             <div className="space-y-2">
-                                {user?.transactions?.length !== 0 && <p className="font-medium text-sm">Recent some transactions..</p>}
+                                {user?.transactions?.length !== 0 && <p className="font-medium text-sm">Some recent transactions..</p>}
                                 {user?.transactions?.length === 0 && <p className="text-center">No transactions</p>}
                                 {user?.transactions
                                     ?.slice() // Create a copy to avoid mutating original
