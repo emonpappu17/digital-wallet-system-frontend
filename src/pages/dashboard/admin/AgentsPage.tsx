@@ -12,7 +12,8 @@ import {
 import { ActionButtonWithConfirm } from "@/components/ui/ConfirmButton";
 import { Input } from "@/components/ui/input";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { UserDetailsModal } from "@/components/ui/UserDetailsModal";
 import { usePagination } from "@/hooks/use-pagination";
@@ -24,184 +25,134 @@ import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
 import { motion } from "framer-motion";
 import {
+    AlertTriangle,
     CheckCircle,
     CircleXIcon,
     Eye,
-    ListFilterIcon,
+    RefreshCw,
     Search,
     XCircle
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-type AgentStatus = "pending" | "active" | "suspended" | "rejected";
-
+type AgentStatus = "PENDING" | "ACTIVE" | "SUSPEND";
 
 /** simple util for date format */
 const formatDate = (iso?: string) =>
     iso ? new Date(iso).toLocaleDateString() + " " + new Date(iso).toLocaleTimeString() : "-";
 
-/** Agent Details Modal (in-file component) */
-// function AgentDetailsModal({
-//     open,
-//     onOpenChange,
-//     agent,
-//     handleApprove,
-//     onSuspend,
-// }: {
-//     open: boolean;
-//     onOpenChange: (v: boolean) => void;
-//     agent: TUser | null;
-//     onApprove: (id: string) => Promise<void>;
-//     onSuspend: (id: string) => Promise<void>;
-// }) {
-//     const [suspendReasonLocal, setSuspendReasonLocal] = useState("");
+// Skeleton Components
+const StatCardSkeleton = () => (
+    <div className="bg-gray-50 dark:bg-gray-900/40 rounded-lg p-4">
+        <Skeleton className="h-3 w-16 mb-2" />
+        <Skeleton className="h-8 w-12" />
+    </div>
+);
 
-//     useEffect(() => {
-//         if (!open) setSuspendReasonLocal("");
-//     }, [open]);
+const TableRowSkeleton = () => (
+    <TableRow>
+        <TableCell>
+            <div className="flex items-center gap-3">
+                <Skeleton className="h-9 w-9 rounded-full" />
+                <div className="flex flex-col gap-1">
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-20" />
+                </div>
+            </div>
+        </TableCell>
+        <TableCell><Skeleton className="h-4 w-20" /></TableCell>
+        <TableCell><Skeleton className="h-6 w-16 rounded-full" /></TableCell>
+        <TableCell><Skeleton className="h-4 w-24" /></TableCell>
+        <TableCell><Skeleton className="h-4 w-8" /></TableCell>
+        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+        <TableCell><Skeleton className="h-4 w-16" /></TableCell>
+        <TableCell className="text-right">
+            <div className="flex items-center justify-end gap-2">
+                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-8 w-20" />
+                <Skeleton className="h-8 w-10" />
+            </div>
+        </TableCell>
+    </TableRow>
+);
 
-//     if (!agent) return null;
+const ErrorState = ({ error, onRetry }: { error: any; onRetry: () => void }) => (
+    <Card className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/10">
+        <CardContent className="p-6">
+            <div className="flex items-center justify-center text-center">
+                <div className="space-y-4">
+                    <AlertTriangle className="h-12 w-12 text-red-500 mx-auto" />
+                    <div>
+                        <h3 className="text-lg font-semibold text-red-900 dark:text-red-100">
+                            Failed to Load Agents
+                        </h3>
+                        <p className="text-sm text-red-700 dark:text-red-200 mt-1">
+                            {error?.data?.message || error?.message || "Something went wrong while fetching agents data."}
+                        </p>
+                    </div>
+                    <Button
+                        onClick={onRetry}
+                        variant="outline"
+                        className="border-red-300 text-red-700 hover:bg-red-100 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900/20"
+                    >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Try Again
+                    </Button>
+                </div>
+            </div>
+        </CardContent>
+    </Card>
+);
 
-//     return (
-//         <Dialog open={open} onOpenChange={onOpenChange}>
-//             <DialogContent className="max-w-2xl">
-//                 <DialogHeader>
-//                     <div className="flex items-center gap-4">
-//                         <Avatar className="h-14 w-14">
-//                             <AvatarImage src="https://github.com/shadcn.png" />
-//                             <AvatarFallback>{agent.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-//                         </Avatar>
-//                         <div>
-//                             <DialogTitle className="text-lg">{agent.name}</DialogTitle>
-//                             <div className="text-sm text-muted-foreground">{agent.shopName}</div>
-//                             <div className="text-xs text-muted-foreground">{agent.phoneNumber} • {agent.email}</div>
-//                         </div>
-//                         <div className="ml-auto">
-//                             <Badge variant={agent.status === Status.ACTIVE ? "secondary" : agent.status === Status.PENDING ? "outline" : "destructive"}>
-//                                 {agent.status.toUpperCase()}
-//                             </Badge>
-//                         </div>
-//                     </div>
-//                 </DialogHeader>
-
-//                 <div className="mt-4">
-//                     <Tabs defaultValue="profile" className="space-y-4">
-//                         <TabsList>
-//                             <TabsTrigger value="profile">Profile</TabsTrigger>
-//                             <TabsTrigger value="wallet">Wallet</TabsTrigger>
-//                             <TabsTrigger value="transactions">Transactions</TabsTrigger>
-//                             {/* <TabsTrigger value="audit">Audit</TabsTrigger> */}
-//                         </TabsList>
-
-//                         <TabsContent value="profile">
-//                             <Card>
-//                                 <CardContent className="grid grid-cols-2 gap-3">
-//                                     <div>
-//                                         <div className="text-xs text-muted-foreground">Joined</div>
-//                                         <div className="font-medium">{new Date(agent.createdAt).toLocaleString()}</div>
-//                                     </div>
-//                                     <div>
-//                                         <div className="text-xs text-muted-foreground">Commission</div>
-//                                         <div className="font-medium">
-//                                             ৳ {agent.commission}
-//                                         </div>
-//                                     </div>
-//                                     <div>
-//                                         <div className="text-xs text-muted-foreground">Transactions</div>
-//                                         <div className="font-medium">
-//                                             {agent.transactionsCount}
-//                                         </div>
-//                                     </div>
-//                                     <div>
-//                                         <div className="text-xs text-muted-foreground">Volume</div>
-//                                         <div className="font-medium">
-
-//                                             ৳ {agent.transactionVolume}
-//                                         </div>
-//                                     </div>
-//                                 </CardContent>
-//                             </Card>
-//                         </TabsContent>
-
-//                         <TabsContent value="wallet">
-//                             <Card>
-//                                 <CardContent className="grid grid-cols-1 gap-2">
-//                                     <div className="text-xs text-muted-foreground">Balance</div>
-//                                     <div className="text-2xl font-semibold">
-//                                         ৳ {agent.balance}
-//                                     </div>
-//                                 </CardContent>
-//                             </Card>
-//                         </TabsContent>
-
-//                         <TabsContent value="transactions">
-//                             <div className="space-y-2">
-//                                 {[...Array(6)].map((_, i) => (
-//                                     <div key={i} className="flex items-center justify-between border-b py-2">
-//                                         <div>
-//                                             <div className="font-medium">
-//                                                 Tx #{agent.transactionsCount as number - i}
-//                                             </div>
-//                                             <div className="text-xs text-muted-foreground">{new Date().toLocaleDateString()}</div>
-//                                         </div>
-//                                         <div className="font-medium">৳ {(Math.random() * 4000).toFixed(0)}</div>
-//                                     </div>
-//                                 ))}
-//                             </div>
-//                         </TabsContent>
-
-//                         {/* <TabsContent value="audit">
-//                             <div className="text-sm text-muted-foreground">Audit logs and notes will show here. (Replace with real data)</div>
-//                         </TabsContent> */}
-//                     </Tabs>
-//                 </div>
-
-//                 <DialogFooter className="mt-4 flex items-center justify-between">
-//                     <div className="flex items-center gap-2">
-//                         {agent.status !== Status.ACTIVE && (
-//                             // <Button
-//                             // // onClick={() => onApprove(agent._id)}
-
-//                             // ><CheckCircle className="mr-2 h-4 w-4" /> Approve</Button>
-//                             <ActionButtonWithConfirm
-//                                 icon={<CheckCircle className="h-4 w-4 text-white" />}
-//                                 title="Approve"
-//                                 dialogTitle="Are you absolutely sure?"
-//                                 dialogDescription={`Are you sure you want to approve ${agent?.name}? They will become an active agent and gain access to the agent dashboard all activities.`}
-//                                 onConfirm={() => handleApprove(agent._id)}
-//                             />
-//                         )}
-//                         {agent.status !== Status.SUSPEND && (
-//                             <div className="flex items-center gap-2">
-//                                 <Input placeholder="Reason (optional)" value={suspendReasonLocal} onChange={(e) => setSuspendReasonLocal(e.target.value)} />
-//                                 <Button variant="destructive"
-//                                 // onClick={() => onSuspend(agent.id, suspendReasonLocal)}
-//                                 ><XCircle className="mr-2 h-4 w-4" /> Suspend</Button>
-//                             </div>
-//                         )}
-//                     </div>
-//                     <Button variant="ghost" onClick={() => onOpenChange(false)}>Close</Button>
-//                 </DialogFooter>
-//             </DialogContent>
-//         </Dialog>
-//     );
-// }
+const EmptyState = () => (
+    <Card className="border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/10">
+        <CardContent className="p-12">
+            <div className="flex items-center justify-center text-center">
+                <div className="space-y-4">
+                    <div className="h-12 w-12 mx-auto bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                        <Search className="h-6 w-6 text-gray-500" />
+                    </div>
+                    <div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                            No Agents Found
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            Try adjusting your search criteria or filters.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </CardContent>
+    </Card>
+);
 
 export default function AgentsPage() {
     const dispatch = useAppDispatch();
+
     const [search, setSearch] = useState("");
+    const [statusFilter, setStatusFilter] = useState<AgentStatus | "">("");
+    const [minCommission, setMinCommission] = useState<number | "">("");
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(5);
     const paginationItemsToDisplay = 4;
 
-    // API Call
-    const { data } = useGetAllAgentsQuery({ limit, page: currentPage, search: search });
-    const [approveAgent] = useApproveAgentMutation();
-    const [suspendAgent] = useSuspendAgentMutation();
+    // API Calls
+    const { data, isLoading, isError, error, refetch } = useGetAllAgentsQuery(
+        { limit, page: currentPage, search: search, status: statusFilter, minCommission },
+        {
+            // Add some RTK Query options for better UX
+            refetchOnMountOrArgChange: true,
+            refetchOnReconnect: true,
+        }
+    );
 
-    // const totalPages = data?.meta?.totalPage || 1;
-    const totalPages = data?.data?.pagination?.totalPages || 1;
+    const [approveAgent, { isLoading: isApproving }] = useApproveAgentMutation();
+    const [suspendAgent, { isLoading: isSuspending }] = useSuspendAgentMutation();
+
+    const totalPages = data?.meta?.totalPages || 1;
+    const apiAgents = data?.data?.agents;
+    const statistics = data?.data?.statistics;
 
     const { pages, showLeftEllipsis, showRightEllipsis } = usePagination({
         currentPage,
@@ -209,55 +160,7 @@ export default function AgentsPage() {
         paginationItemsToDisplay,
     });
 
-    const apiAgents = data?.data?.agents
-
-    console.log('apiAgents==>', apiAgents);
-
-    // filters & state
-    const [statusFilter, setStatusFilter] = useState<AgentStatus | "all">("all");
-    const [minCommission, setMinCommission] = useState<number | "">("");
-
-    // modal / dialog states
-    // const [selectedAgent, setSelectedAgent] = useState<TUser | null>(null);
-    // const [modalOpen, setModalOpen] = useState(false);
-
-    // filtering
-    // const filtered = useMemo(() => {
-    //     let list = agents.slice();
-
-    //     if (statusFilter !== "all") {
-    //         list = list.filter((a) => a.status === statusFilter);
-    //     }
-
-    //     if (search.trim()) {
-    //         const q = search.toLowerCase();
-    //         list = list.filter(
-    //             (a) =>
-    //                 a.name.toLowerCase().includes(q) ||
-    //                 a.phone.toLowerCase().includes(q) ||
-    //                 (a.shopName || "").toLowerCase().includes(q) ||
-    //                 (a.email || "").toLowerCase().includes(q)
-    //         );
-    //     }
-
-    //     if (minCommission !== "") {
-    //         const min = Number(minCommission);
-    //         if (!Number.isNaN(min)) {
-    //             list = list.filter((a) => a.commissionRate >= min / 100); // input in percent
-    //         }
-    //     }
-
-    //     // default sort by joinedAt desc
-    //     list.sort((x, y) => (new Date(y.joinedAt).getTime() - new Date(x.joinedAt).getTime()));
-    //     return list;
-    // }, [agents, statusFilter, search, minCommission]);
-
-    // pagination
-    // const totalPages = Math.max(1, Math.ceil(filtered.length / perPage));
-    // const paginated = useMemo(() => {
-    //     const start = (page - 1) * perPage;
-    //     return filtered.slice(start, start + perPage);
-    // }, [filtered, page, perPage]);
+    // console.log('apiAgents==>', apiAgents);
 
     const handleApprove = async (agentId: string | undefined) => {
         const toastId = toast.loading("Approving Agent...")
@@ -274,120 +177,171 @@ export default function AgentsPage() {
         const toastId = toast.loading("Suspending Agent...")
         try {
             await suspendAgent(agentId).unwrap();
-            toast.success(`Agent suspend successfully`, { id: toastId });
+            toast.success(`Agent suspended successfully`, { id: toastId });
         } catch (err: any) {
             console.log(err);
-            toast.error(err?.data?.message || "Failed to approve", { id: toastId });
+            toast.error(err?.data?.message || "Failed to suspend", { id: toastId });
         }
     };
 
-    // UI helpers
-    // const openDetails = (agent: TUser) => {
-    //     setSelectedAgent(agent);
-    //     setModalOpen(true);
-    // };
+    const handleRetry = () => {
+        refetch();
+    };
 
+    const resetFilters = () => {
+        setSearch("");
+        setStatusFilter("");
+        setMinCommission("");
+        setCurrentPage(1);
+    };
+
+    // Show error state
+    if (isError && !isLoading) {
+        return (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-2 md:p-4">
+                <ErrorState error={error} onRetry={handleRetry} />
+                <UserDetailsModal />
+            </motion.div>
+        );
+    }
 
     return (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-6">
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-2 md:p-4">
             {/* Header + Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="col-span-2">
+                <Card className="md:col-span-2">
                     <CardHeader>
                         <CardTitle>Manage Agents</CardTitle>
                         <CardDescription>Approve, suspend, and review agents — track volumes and performance.</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div className="bg-blue-50 dark:bg-blue-900/40 rounded-lg p-4">
-                                <div className="text-xs text-muted-foreground">Total Agents</div>
-                                <div className="mt-1 text-2xl font-semibold text-blue-900 dark:text-white">{apiAgents?.length}</div>
-                            </div>
-                            <div className="bg-yellow-50 dark:bg-yellow-900/10 rounded-lg p-4">
-                                <div className="text-xs text-muted-foreground">Pending</div>
-                                <div className="mt-1 text-2xl font-semibold text-yellow-700">4(H)</div>
-                            </div>
-                            <div className="bg-green-50 dark:bg-green-900/10 rounded-lg p-4">
-                                <div className="text-xs text-muted-foreground">Active</div>
-                                <div className="mt-1 text-2xl font-semibold text-green-700">6(H)</div>
-                            </div>
-                            <div className="bg-red-50 dark:bg-red-900/10 rounded-lg p-4">
-                                <div className="text-xs text-muted-foreground">Suspended</div>
-                                <div className="mt-1 text-2xl font-semibold text-red-600">67(H)</div>
-                            </div>
+                            {isLoading ? (
+                                <>
+                                    <StatCardSkeleton />
+                                    <StatCardSkeleton />
+                                    <StatCardSkeleton />
+                                    <StatCardSkeleton />
+                                </>
+                            ) : (
+                                <>
+                                    <div className="bg-blue-50 dark:bg-blue-900/40 rounded-lg p-4">
+                                        <div className="text-xs text-muted-foreground">Total Agents</div>
+                                        <div className="mt-1 text-2xl font-semibold text-blue-900 dark:text-white">{statistics?.totalAgents || 0}</div>
+                                    </div>
+                                    <div className="bg-yellow-50 dark:bg-yellow-900/10 rounded-lg p-4">
+                                        <div className="text-xs text-muted-foreground">Pending</div>
+                                        <div className="mt-1 text-2xl font-semibold text-yellow-700">{statistics?.totalPendingAgents || 0}</div>
+                                    </div>
+                                    <div className="bg-green-50 dark:bg-green-900/10 rounded-lg p-4">
+                                        <div className="text-xs text-muted-foreground">Active</div>
+                                        <div className="mt-1 text-2xl font-semibold text-green-700">{statistics?.totalActiveAgents || 0}</div>
+                                    </div>
+                                    <div className="bg-red-50 dark:bg-red-900/10 rounded-lg p-4">
+                                        <div className="text-xs text-muted-foreground">Suspended</div>
+                                        <div className="mt-1 text-2xl font-semibold text-red-600">{statistics?.totalSuspendedAgents || 0}</div>
+                                    </div>
+                                </>
+                            )}
                         </div>
 
                         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <div className="text-sm text-muted-foreground">Transactions: <span className="font-medium text-muted-foreground">456(H)</span></div>
-                            <div className="text-sm text-muted-foreground">Volume: <span className="font-medium">{`৳ 235(H)`}</span></div>
+                            {isLoading ? (
+                                <>
+                                    <Skeleton className="h-4 w-32" />
+                                    <Skeleton className="h-4 w-28" />
+                                </>
+                            ) : (
+                                <>
+                                    <div className="text-sm text-muted-foreground">Transactions: <span className="font-medium text-muted-foreground">{statistics?.totalTransactions || 0}</span></div>
+                                    <div className="text-sm text-muted-foreground">Volume: <span className="font-medium">{`৳ ${statistics?.totalVolume || 0}`}</span></div>
+                                </>
+                            )}
                         </div>
                     </CardContent>
                 </Card>
 
                 {/* Filters Card */}
-                <Card>
+                <Card className="w-full">
                     <CardHeader>
                         <CardTitle>Filters</CardTitle>
                         <CardDescription>Search and narrow results</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <div className="space-y-3">
-                            {/* <div className="flex items-center gap-2">
-                                <Search className="h-4 w-4 text-muted-foreground" />
-                                <Input placeholder="Search by name / phone / shop / email" value={search}
-                                    onChange={(e) => { setSearch(e.target.value) }}
-                                />
-                            </div> */}
-
                             <div className="relative">
                                 <Input
-                                    // id={`${id}-input`}
                                     className={cn("peer w-full ps-9")}
                                     value={search}
                                     onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
                                     placeholder="Filter by name, email or phone number..."
+                                    disabled={isLoading}
                                 />
                                 <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3">
-                                    {/* <ListFilterIcon size={16} aria-hidden="true" /> */}
                                     <Search className="h-4 w-4 text-muted-foreground" />
                                 </div>
                                 {search && (
                                     <button
                                         className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center"
                                         aria-label="Clear filter"
-                                        onClick={() => {
-                                            setSearch("");
-                                        }}
+                                        onClick={() => setSearch("")}
+                                        disabled={isLoading}
                                     >
                                         <CircleXIcon size={16} />
                                     </button>
                                 )}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-2 ">
-                                <Select value={statusFilter}
-                                // ={(v) => { setStatusFilter(v as any); setPage(1); }}
+                            <div className="grid grid-cols-2 gap-2">
+                                <Select
+                                    value={statusFilter}
+                                    onValueChange={(v) => {
+                                        setStatusFilter(v as any);
+                                        setCurrentPage(1);
+                                    }}
+                                    disabled={isLoading}
                                 >
                                     <SelectTrigger className="w-full">
-                                        <div className="px-2">{statusFilter === "all" ? "All statuses" : statusFilter}</div>
+                                        <SelectValue placeholder="Select Status" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="all">All</SelectItem>
-                                        <SelectItem value="pending">Pending</SelectItem>
-                                        <SelectItem value="active">Active</SelectItem>
-                                        <SelectItem value="suspended">Suspended</SelectItem>
-                                        <SelectItem value="rejected">Rejected</SelectItem>
+                                        <SelectGroup>
+                                            <SelectLabel>Status</SelectLabel>
+                                            <SelectItem value="PENDING">Pending</SelectItem>
+                                            <SelectItem value="ACTIVE">Active</SelectItem>
+                                            <SelectItem value="SUSPEND">Suspended</SelectItem>
+                                        </SelectGroup>
                                     </SelectContent>
                                 </Select>
 
-                                <Input type="number" placeholder="Min commission %" value={minCommission}
-                                //  onChange={(e) => { const v = e.target.value; setMinCommission(v === "" ? "" : Number(v)); setPage(1); }} 
+                                <Input
+                                    type="number"
+                                    placeholder="Min commission BDT"
+                                    value={minCommission}
+                                    onChange={(e) => {
+                                        const v = e.target.value;
+                                        setMinCommission(v === "" ? "" : Number(v));
+                                        setCurrentPage(1);
+                                    }}
+                                    disabled={isLoading}
                                 />
                             </div>
 
                             <div className="flex items-center gap-2">
-                                <Button variant="ghost" onClick={() => { setSearch(""); setStatusFilter("all"); setMinCommission(""); }}>Reset</Button>
-                                <div className="ml-auto text-sm text-muted-foreground">Showing {apiAgents?.length} results</div>
+                                <Button
+                                    variant="ghost"
+                                    onClick={resetFilters}
+                                    disabled={isLoading}
+                                >
+                                    Reset
+                                </Button>
+                                <div className="ml-auto text-sm text-muted-foreground">
+                                    {isLoading ? (
+                                        <Skeleton className="h-4 w-24" />
+                                    ) : (
+                                        `Showing ${apiAgents?.length || 0} results`
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </CardContent>
@@ -402,282 +356,208 @@ export default function AgentsPage() {
                 </CardHeader>
 
                 <CardContent>
-                    <Table className="rounded-md border">
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Agent</TableHead>
-                                <TableHead>Shop</TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Joined</TableHead>
-                                <TableHead>Tx Count</TableHead>
-                                <TableHead>Volume</TableHead>
-                                <TableHead>Commission</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {/* {paginated.map((agent) => (
-                                <TableRow key={agent.id} className="hover:bg-muted/5">
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9">
-                                                <AvatarImage src={agent.avatarUrl ?? undefined} />
-                                                <AvatarFallback>{agent.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex flex-col">
-                                                <div className="font-medium">{agent.name}</div>
-                                                <div className="text-xs text-muted-foreground">{agent.phone}</div>
-                                            </div>
-                                        </div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div className="text-sm">{agent.shopName}</div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <Badge variant={agent.status === "active" ? "secondary" : agent.status === "pending" ? "outline" : "destructive"}>
-                                            {agent.status.toUpperCase()}
-                                        </Badge>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div className="text-sm">{formatDate(agent.joinedAt)}</div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div className="text-sm">{agent.transactionsCount}</div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div className="text-sm">
-                                            {`৳ ${agent.transactionVolume.toLocaleString()}`}
-                                        </div>
-                                    </TableCell>
-
-                                    <TableCell>
-                                        <div className="text-sm">{(agent.commissionRate * 100).toFixed(2)}%</div>
-                                    </TableCell>
-
-                                    <TableCell className="text-right">
-                                        <div className="flex items-center justify-end gap-2">
-                                            {agent.status === "pending" && (
-                                                <Button size="sm" onClick={() => setConfirmDialog({ type: "approve", agent })} title="Approve">
-                                                    <CheckCircle className="h-4 w-4" />
-                                                </Button>
-                                            )}
-                                            {agent.status !== "suspended" && agent.status !== "rejected" && (
-                                                <Button size="sm" variant="destructive" onClick={() => setConfirmDialog({ type: "suspend", agent })} title="Suspend">
-                                                    <XCircle className="h-4 w-4" />
-                                                </Button>
-                                            )}
-                                            <Button size="sm" variant="ghost" onClick={() => openDetails(agent)} title="View">
-                                                <Eye className="h-4 w-4" />
-                                            </Button>
-                                        </div>
-                                    </TableCell>
+                    {!isLoading && !isError && apiAgents && apiAgents.length === 0 ? (
+                        <EmptyState />
+                    ) : (
+                        <Table className="rounded-md border">
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Agent</TableHead>
+                                    <TableHead>Shop</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead>Joined</TableHead>
+                                    <TableHead>Tx Count</TableHead>
+                                    <TableHead>Volume</TableHead>
+                                    <TableHead>Commission</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
-                            ))}
-                             */}
+                            </TableHeader>
+                            <TableBody>
+                                {isLoading ? (
+                                    // Show skeleton rows while loading
+                                    Array.from({ length: limit }).map((_, index) => (
+                                        <TableRowSkeleton key={index} />
+                                    ))
+                                ) : (
+                                    apiAgents?.map((agent: TUser) => (
+                                        <TableRow key={agent._id} className="hover:bg-muted/5">
+                                            <TableCell>
+                                                <div className="flex items-center gap-3">
+                                                    <Avatar className="h-9 w-9">
+                                                        <AvatarImage src="https://github.com/shadcn.png" />
+                                                        <AvatarFallback>{agent.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</AvatarFallback>
+                                                    </Avatar>
+                                                    <div className="flex flex-col">
+                                                        <div className="font-medium">{agent.name}</div>
+                                                        <div className="text-xs text-muted-foreground">{agent.phoneNumber}</div>
+                                                    </div>
+                                                </div>
+                                            </TableCell>
 
-                            {apiAgents?.map((agent: TUser) => (
-                                <TableRow key={agent._id} className="hover:bg-muted/5">
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-9 w-9">
-                                                <AvatarImage src="https://github.com/shadcn.png" />
-                                                <AvatarFallback>{agent.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex flex-col">
-                                                <div className="font-medium">{agent.name}</div>
-                                                <div className="text-xs text-muted-foreground">{agent.phoneNumber}</div>
-                                            </div>
-                                        </div>
-                                    </TableCell>
+                                            <TableCell>
+                                                <div className="text-sm">{agent.shopName}</div>
+                                            </TableCell>
 
-                                    <TableCell>
-                                        <div className="text-sm">{agent.shopName}</div>
-                                    </TableCell>
+                                            <TableCell>
+                                                <Badge variant={agent.status === Status.ACTIVE ? "secondary" : agent.status === Status.PENDING ? "outline" : "destructive"}>
+                                                    {agent.status.toUpperCase()}
+                                                </Badge>
+                                            </TableCell>
 
-                                    <TableCell>
-                                        <Badge variant={agent.status === Status.ACTIVE ? "secondary" : agent.status === Status.PENDING ? "outline" : "destructive"}>
-                                            {agent.status.toUpperCase()}
-                                        </Badge>
-                                    </TableCell>
+                                            <TableCell>
+                                                <div className="text-sm">{formatDate(agent.createdAt)}</div>
+                                            </TableCell>
 
-                                    <TableCell>
-                                        <div className="text-sm">{formatDate(agent.createdAt)}</div>
-                                    </TableCell>
+                                            <TableCell>
+                                                <div className="text-sm">
+                                                    {agent.transactionsCount}
+                                                </div>
+                                            </TableCell>
 
-                                    <TableCell>
-                                        <div className="text-sm">
-                                            {agent.transactionsCount}
-                                        </div>
-                                    </TableCell>
+                                            <TableCell>
+                                                <div className="text-sm">
+                                                    {`৳ ${agent.transactionVolume}`}
+                                                </div>
+                                            </TableCell>
 
-                                    <TableCell>
-                                        <div className="text-sm">
-                                            {`৳ ${agent.transactionVolume}`}
-                                        </div>
-                                    </TableCell>
+                                            <TableCell>
+                                                <div className="text-sm">
+                                                    ৳ {(agent.commission as number).toFixed(2)}
+                                                </div>
+                                            </TableCell>
 
-                                    <TableCell>
-                                        <div className="text-sm">
-                                            ৳ {(agent.commission as number).toFixed(2)}
-                                        </div>
-                                    </TableCell>
+                                            <TableCell className="text-right">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    {(agent.status === Status.PENDING || agent.status === Status.SUSPEND) && (
+                                                        <ActionButtonWithConfirm
+                                                            icon={<CheckCircle className="h-4 w-4 text-white" />}
+                                                            title="Approve"
+                                                            dialogTitle="Are you absolutely sure?"
+                                                            dialogDescription={`Are you sure you want to approve ${agent?.name}? They will become an active agent and gain access to the agent dashboard all activities.`}
+                                                            onConfirm={() => handleApprove(agent._id)}
+                                                            disabled={isApproving || isSuspending}
+                                                        />
+                                                    )}
+                                                    {agent.status !== Status.SUSPEND && agent.status !== Status.REJECTED && (
+                                                        <ActionButtonWithConfirm
+                                                            icon={<XCircle className="h-4 w-4 text-white" />}
+                                                            title="Suspend"
+                                                            variant="destructive"
+                                                            dialogTitle="Are you absolutely sure?"
+                                                            dialogDescription={`Are you sure you want to suspend ${agent?.name}? They will become a suspended agent and cannot perform some actions.`}
+                                                            onConfirm={() => handleSuspend(agent._id)}
+                                                            disabled={isApproving || isSuspending}
+                                                        />
+                                                    )}
 
-                                    <TableCell className="text-right">
-                                        <div className="flex items-center justify-end gap-2">
-                                            {(agent.status === Status.PENDING || agent.status === Status.SUSPEND) && (
-                                                <ActionButtonWithConfirm
-                                                    icon={<CheckCircle className="h-4 w-4 text-white" />}
-                                                    title="Approve"
-                                                    dialogTitle="Are you absolutely sure?"
-                                                    dialogDescription={`Are you sure you want to approve ${agent?.name}? They will become an active agent and gain access to the agent dashboard all activities.`}
-                                                    onConfirm={() => handleApprove(agent._id)}
-                                                />
-                                            )}
-                                            {agent.status !== Status.SUSPEND && agent.status !== Status.REJECTED && (
-                                                <ActionButtonWithConfirm
-                                                    icon={<XCircle className="h-4 w-4 text-white" />}
-                                                    title="Suspend"
-                                                    variant="destructive"
-                                                    dialogTitle="Are you absolutely sure?"
-                                                    dialogDescription={`Are you sure you want to suspend ${agent?.name}? They will become an suspend agent and can not paly some action.`}
-                                                    onConfirm={() => handleSuspend(agent._id)}
-                                                />
-                                            )}
-
-
-                                            <Button size="sm"
-                                                variant="outline"
-                                                onClick={() => dispatch(openModal({ type: "agent", data: agent }))}
-                                                // onClick={() => openDetails(agent)}
-                                                title="View"
-                                            >
-                                                <Eye className="h-4 w-4" />
-                                            </Button>
-
-                                        </div>
-
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() => dispatch(openModal({ type: "agent", data: agent }))}
+                                                        title="View"
+                                                        disabled={isApproving || isSuspending}
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                )}
+                            </TableBody>
+                        </Table>
+                    )}
                 </CardContent>
             </Card>
 
-
-            <div className=" mt-4 ">
-                <div className="flex justify-between items-center">
-                    {/* Results per page */}
-                    <div className="flex items-center gap-3 ">
-                        <Select
-                            defaultValue={String(limit)}
-                            onValueChange={(value) => {
-                                setLimit(Number(value));
-                                setCurrentPage(1); // reset to first page when limit changes
-                            }}
-                            aria-label="Results per page"
-                        >
-                            <SelectTrigger
-                                id="results-per-page"
-                                className="w-fit whitespace-nowrap"
+            {/* Pagination - only show if we have data and not loading */}
+            {!isLoading && !isError && apiAgents && apiAgents.length > 0 && (
+                <div className="mt-4">
+                    <div className="flex justify-between items-center">
+                        {/* Results per page */}
+                        <div className="flex items-center gap-3">
+                            <Select
+                                defaultValue={String(limit)}
+                                onValueChange={(value) => {
+                                    setLimit(Number(value));
+                                    setCurrentPage(1);
+                                }}
+                                aria-label="Results per page"
+                                disabled={isLoading}
                             >
-                                <SelectValue placeholder="Select number of results" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {[5, 10, 15, 20].map((pageSize) => (
-                                    <SelectItem key={pageSize} value={pageSize.toString()}>
-                                        {pageSize} / page
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
+                                <SelectTrigger
+                                    id="results-per-page"
+                                    className="w-fit whitespace-nowrap"
+                                >
+                                    <SelectValue placeholder="Select number of results" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {[5, 10, 15, 20].map((pageSize) => (
+                                        <SelectItem key={pageSize} value={pageSize.toString()}>
+                                            {pageSize} / page
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
 
-                    <div>
-                        <Pagination>
-                            <PaginationContent>
-                                {/* Previous page button */}
-                                <PaginationItem>
-                                    <PaginationPrevious
-                                        className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50"
-                                        onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                                        aria-disabled={currentPage === 1 ? true : undefined}
-                                        role={currentPage === 1 ? "link" : undefined}
-                                    />
-                                </PaginationItem>
-
-                                {/* Left ellipsis (...) */}
-                                {showLeftEllipsis && (
+                        <div>
+                            <Pagination>
+                                <PaginationContent>
+                                    {/* Previous page button */}
                                     <PaginationItem>
-                                        <PaginationEllipsis />
+                                        <PaginationPrevious
+                                            className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50"
+                                            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                                            aria-disabled={currentPage === 1 ? true : undefined}
+                                            role={currentPage === 1 ? "link" : undefined}
+                                        />
                                     </PaginationItem>
-                                )}
 
-                                {/* Page number links */}
-                                {pages.map((page) => (
-                                    <PaginationItem
-                                        key={page}
-                                        onClick={() => setCurrentPage(page)}
-                                    >
-                                        <PaginationLink
-                                            isActive={currentPage === page}
+                                    {/* Left ellipsis (...) */}
+                                    {showLeftEllipsis && (
+                                        <PaginationItem>
+                                            <PaginationEllipsis />
+                                        </PaginationItem>
+                                    )}
+
+                                    {/* Page number links */}
+                                    {pages.map((page) => (
+                                        <PaginationItem
+                                            key={page}
+                                            onClick={() => setCurrentPage(page)}
                                         >
-                                            {page}
-                                        </PaginationLink>
-                                    </PaginationItem>
-                                ))}
+                                            <PaginationLink
+                                                isActive={currentPage === page}
+                                            >
+                                                {page}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    ))}
 
-                                {/* Right ellipsis (...) */}
-                                {showRightEllipsis && (
+                                    {/* Right ellipsis (...) */}
+                                    {showRightEllipsis && (
+                                        <PaginationItem>
+                                            <PaginationEllipsis />
+                                        </PaginationItem>
+                                    )}
+
+                                    {/* Next page button */}
                                     <PaginationItem>
-                                        <PaginationEllipsis />
+                                        <PaginationNext
+                                            className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer"
+                                            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                                            aria-disabled={currentPage === totalPages ? true : undefined}
+                                            role={currentPage === totalPages ? "link" : undefined}
+                                        />
                                     </PaginationItem>
-                                )}
-
-                                {/* Next page button */}
-                                <PaginationItem>
-                                    <PaginationNext
-                                        className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer "
-                                        onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                                        aria-disabled={currentPage === totalPages ? true : undefined}
-                                        role={currentPage === totalPages ? "link" : undefined}
-                                    />
-                                </PaginationItem>
-                            </PaginationContent>
-                        </Pagination>
+                                </PaginationContent>
+                            </Pagination>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-
-
-            {/* Agent Details Modal (replaces Drawer) */}
-            {/* <AgentDetailsModal
-                open={modalOpen}
-                onOpenChange={(open) => {
-                    setModalOpen(open);
-                    if (!open) setSelectedAgent(null);
-                }}
-                agent={selectedAgent}
-                onApprove={async (id) => {
-                    await approveAgent(id);
-                }}
-                onSuspend={async (id,) => {
-                    await suspendAgent(id);
-                }}
-            /> */}
-
-            <UserDetailsModal
-            // handleApprove={() => handleApprove(agent._id)}
-            // handleSuspend={() => handleSuspend(agent._id)}
-            ></UserDetailsModal>
+            )}
+            <UserDetailsModal />
         </motion.div>
     );
 }
-
