@@ -2,6 +2,15 @@ import { baseApi } from "../baseApi";
 
 export const userApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        getAllUsers: builder.query({
+            query: (params) => ({
+                url: "/admin/users",
+                method: "GET",
+                params
+            }),
+            providesTags: ['USER']
+        }),
+
         approveAgent: builder.mutation({
             query: (agentId) => ({
                 url: `/agent-requests/${agentId}/approve`,
@@ -29,4 +38,4 @@ export const userApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation } = userApi;
+export const { useGetAllAgentsQuery, useGetAllUsersQuery, useApproveAgentMutation, useSuspendAgentMutation } = userApi;

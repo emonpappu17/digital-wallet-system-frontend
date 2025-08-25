@@ -366,7 +366,7 @@ export default function AgentsPage() {
                                     <TableHead>Shop</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Joined</TableHead>
-                                    <TableHead>Tx Count</TableHead>
+                                    <TableHead>Transactions</TableHead>
                                     <TableHead>Volume</TableHead>
                                     <TableHead>Commission</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
