@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import SendMoneyAmountStep from "@/components/modules/user/SendMoneyAmountStep";
-// import ProgressIndicator from "@/components/ui/ProgressIndicator";
+
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +24,7 @@ interface IError {
   amount?: string
 }
 
-const SendMoneyPage = () => {
+const CashOutPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [amount, setAmount] = useState('');
   const [errors, setErrors] = useState<IError>({});
@@ -454,4 +453,4 @@ const SendMoneyPage = () => {
   );
 };
 
-export default SendMoneyPage;
+export default CashOutPage;

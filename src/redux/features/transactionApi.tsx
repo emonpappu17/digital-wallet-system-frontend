@@ -27,17 +27,16 @@ export const transactionApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["WALLET"]
         }),
-
-
-        // userProfile: builder.query({
-        //     query: () => ({
-        //         url: "/user/me",
-        //         method: "GET"
-        //     }),
-        //     providesTags: ['USER']
-        // }),
+        cashIn: builder.mutation({
+            query: (userData) => ({
+                url: "/transactions/cash-in",
+                method: "POST",
+                data: userData
+            }),
+            invalidatesTags: ["WALLET"]
+        }),
 
     })
 })
 
-export const { useCashOutMutation, useSendMoneyMutation, useDepositMoneyMutation } = transactionApi;
+export const { useCashInMutation, useCashOutMutation, useSendMoneyMutation, useDepositMoneyMutation } = transactionApi;
