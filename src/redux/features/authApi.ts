@@ -32,14 +32,22 @@ export const authApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: ["USER"]
         }),
+        getUser: builder.mutation({
+            query: (userInfo) => ({
+                url: "/user/get-user",
+                method: "POST",
+                data: userInfo
+            })
+        }),
         userProfile: builder.query({
             query: () => ({
                 url: "/user/me",
                 method: "GET"
             }),
             providesTags: ['USER']
-        })
+        }),
+
     })
 })
 
-export const { useUserProfileQuery, useLogoutMutation, useLoginMutation, useRegisterUserMutation, useRegisterAgentMutation } = authApi;
+export const { useUserProfileQuery, useLogoutMutation, useLoginMutation, useRegisterUserMutation, useRegisterAgentMutation, useGetUserMutation } = authApi;

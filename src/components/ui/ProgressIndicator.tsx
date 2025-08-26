@@ -28,7 +28,7 @@ const ProgressIndicator = ({ currentStep }) => {
             </div>
             <div className="flex justify-between mt-2 text-sm text-gray-600 dark:text-gray-400">
                 <span>Amount</span>
-                <span>Agent</span>
+                <span>Receiver</span>
                 <span>Confirm</span>
                 <span>Complete</span>
             </div>

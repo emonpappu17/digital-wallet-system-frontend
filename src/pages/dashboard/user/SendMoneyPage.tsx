@@ -1,3 +1,4 @@
+import ReceiverSelectionStep from "@/components/modules/user/ReceiverSelectionStep";
 import SendMoneyAmountStep from "@/components/modules/user/SendMoneyAmountStep";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,9 +7,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import ProgressIndicator from "@/components/ui/ProgressIndicator";
+import { LoadingSpinner } from "@/components/ui/spinner";
+import { useGetUserMutation, useUserProfileQuery } from "@/redux/features/authApi";
 import { useGetMyWalletQuery } from "@/redux/features/walletApi";
 import { AlertCircle, ArrowLeft, Badge, MapPin, Phone, Search, Star, User } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 interface IError {
     amount?: string
 }
@@ -25,7 +29,14 @@ const SendMoneyPage = () => {
 
     // API Call
     const { data } = useGetMyWalletQuery(undefined);
+    const { data: getSenderData } = useUserProfileQuery(undefined);
+    const [getUser, { isLoading: gettingUserLoading, data: getUserData }] = useGetUserMutation();
+
     const walletBalance = data?.data?.balance;
+    // const receiverData = getUserData?.data;
+    const senderData = getSenderData?.data;
+
+    console.log('data==>', senderData);
 
 
     // Validate amount
@@ -36,6 +47,7 @@ const SendMoneyPage = () => {
         if (numValue <= 0) return 'Amount must be greater than 0';
         if (numValue < 10) return 'Minimum send money amount is ৳10';
         if (numValue > 50000) return 'Maximum send money amount is ৳50,000';
+        if (value > walletBalance) return "You can not your cross current wallet balance"
         return null;
     };
 
@@ -62,9 +74,33 @@ const SendMoneyPage = () => {
     const handleBackStep = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
-            // setErrors({});
+            setErrors({});
         }
     };
+
+    const handleSearchUser = async () => {
+        if (!searchTerm || searchTerm === '') return 'Please enter receiver account';
+        try {
+            if (senderData.phoneNumber === searchTerm || senderData.email === searchTerm) {
+                return toast.error("Can not send money to own account")
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            const isEmail = emailRegex.test(searchTerm);
+
+            const payload = isEmail ? { email: searchTerm } : { phoneNumber: searchTerm }
+
+            const res = await getUser(payload).unwrap();
+            console.log(res);
+            toast.success("Account found successfully!")
+            handleNextStep();
+
+        } catch (err) {
+            console.error("Get user failed", err);
+            toast.error(err?.data?.message || "Login failed. Try again.");
+        }
+    }
 
     // Step 1: Enter Amount
     // const amountStep = () => (
@@ -128,112 +164,54 @@ const SendMoneyPage = () => {
     // );
 
     // Step 2: Select Agent
-    const renderAgentSelectionStep = () => (
-        <Card className="w-full max-w-2xl mx-auto">
-            <CardHeader>
-                <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm" onClick={handleBackStep}>
-                        <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                    <div>
-                        <CardTitle>Select Agent</CardTitle>
-                        <CardDescription>
-                            Choose an agent to deposit ৳{amount}
-                        </CardDescription>
-                    </div>
-                </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {/* Search bar */}
-                <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                        placeholder="Search by agent name or location..."
-                        // value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
-                    />
-                </div>
+    // const renderReceiverSelectionStep = () => (
+    //     <Card className="w-full max-w-[500px] mx-auto">
+    //         <CardHeader>
+    //             <div className="space-y-4">
+    //                 <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+    //                     <p className="text-sm text-gray-600 dark:text-gray-400">Send money amount</p>
+    //                     <p className="text-2xl font-bold text-green-600">৳
+    //                         {amount?.toLocaleString()}
+    //                     </p>
+    //                 </div>
+    //             </div>
+    //         </CardHeader>
+    //         <CardContent className="space-y-4 ">
+    //             {/* Search bar */}
+    //             <div className="relative">
+    //                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+    //                 <Input
+    //                     placeholder="Enter receiver email or phone number"
+    //                     onChange={(e) => setSearchTerm(e.target.value)}
+    //                     className="pl-10"
+    //                 />
+    //             </div>
 
-                {errors.agent && (
-                    <Alert variant="destructive">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>{errors.agent}</AlertDescription>
-                    </Alert>
-                )}
+    //             <Alert>
+    //                 <AlertCircle className="h-4 w-4" />
+    //                 <AlertDescription className="text-sm">
+    //                     Only send money how has PayWave account
+    //                 </AlertDescription>
+    //             </Alert>
 
-                {/* Agent list */}
-                {/* <div className="space-y-3 max-h-96 overflow-y-auto">
-                    {filteredAgents.map((agent) => (
-                        <Card
-                            key={agent.id}
-                            className={`cursor-pointer transition-all hover:shadow-md ${selectedAgent?.id === agent.id
-                                ? 'border-green-500 bg-green-50 dark:bg-green-900/20'
-                                : ''
-                                }`}
-                            onClick={() => setSelectedAgent(agent)}
-                        >
-                            <CardContent className="p-4">
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <Avatar>
-                                            <AvatarImage src={agent.avatar} />
-                                            <AvatarFallback>
-                                                <User className="h-4 w-4" />
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <h3 className="font-semibold">{agent.name}</h3>
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <Phone className="h-3 w-3" />
-                                                {agent.phone}
-                                            </div>
-                                            <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                                <MapPin className="h-3 w-3" />
-                                                {agent.location} • {agent.distance}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="text-right">
-                                        <div className="flex items-center gap-1">
-                                            <Badge
-                                            // variant={agent.isOnline ? 'default' : 'secondary'}
-                                            >
-                                                {agent.isOnline ? 'Online' : 'Offline'}
-                                            </Badge>
-                                        </div>
-                                        <div className="flex items-center gap-1 mt-1">
-                                            <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                                            <span className="text-sm">{agent.rating}</span>
-                                        </div>
-                                        <p className="text-xs text-gray-500">
-                                            {agent.totalTransactions.toLocaleString()} transactions
-                                        </p>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div> */}
+    //             <div className="flex justify-between items-center">
+    //                 <Button onClick={handleBackStep} variant={"outline"} >Back</Button>
 
-                {/* {filteredAgents.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                        <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>No agents found matching your search</p>
-                    </div>
-                )} */}
-
-                <Button onClick={handleNextStep} className="w-full text-white"
-
-                // disabled={!selectedAgent}
-                >
-                    Continue with
-
-                    {/* {selectedAgent?.name} */}
-                </Button>
-            </CardContent>
-        </Card>
-    );
+    //                 <Button onClick={handleSearchUser} disabled={gettingUserLoading} className=" text-white"
+    //                 >
+    //                     {gettingUserLoading ? (
+    //                         <>
+    //                             <LoadingSpinner size="sm" className="mr-2" />
+    //                             Processing...
+    //                         </>
+    //                     ) : (
+    //                         'Continue'
+    //                     )}
+    //                 </Button>
+    //             </div>
+    //         </CardContent>
+    //     </Card>
+    // );
 
 
 
@@ -253,7 +231,15 @@ const SendMoneyPage = () => {
                         walletBalance={walletBalance}
                     />}
                 {/* {currentStep === 1 && amountStep()} */}
-                {currentStep === 2 && renderAgentSelectionStep()}
+                {currentStep === 2 &&
+                    <ReceiverSelectionStep
+                        amount={amount}
+                        gettingUserLoading={gettingUserLoading}
+                        handleBackStep={handleBackStep}
+                        handleSearchUser={handleSearchUser}
+                        setSearchTerm={setSearchTerm}
+                    />}
+                {/* {currentStep === 2 && renderReceiverSelectionStep()} */}
                 {/* {currentStep === 3 && renderConfirmationStep()}
                 {currentStep === 4 && renderSuccessStep()} */}
             </div>
