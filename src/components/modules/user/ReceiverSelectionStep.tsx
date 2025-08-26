@@ -28,11 +28,11 @@ const ReceiverSelectionStep = ({ amount, setSearchTerm, handleBackStep, handleSe
             <CardContent className="space-y-4 ">
                 {/* Search bar */}
                 <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                    <Search className="absolute left-3 top-[14px] h-4 w-4 text-gray-400" />
                     <Input
                         placeholder="Enter receiver email or phone number"
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-10"
+                        className="pl-10 py-5"
                     />
                 </div>
 
@@ -43,7 +43,7 @@ const ReceiverSelectionStep = ({ amount, setSearchTerm, handleBackStep, handleSe
                     </AlertDescription>
                 </Alert>
 
-                <div className="flex justify-between items-center">
+                {/* <div className="flex justify-between items-center">
                     <Button onClick={handleBackStep} variant={"outline"} >Back</Button>
 
                     <Button onClick={handleSearchUser} disabled={gettingUserLoading} className=" text-white"
@@ -51,6 +51,22 @@ const ReceiverSelectionStep = ({ amount, setSearchTerm, handleBackStep, handleSe
                         {gettingUserLoading ? (
                             <>
                                 <LoadingSpinner size="sm" className="mr-2" />
+                                Processing...
+                            </>
+                        ) : (
+                            'Continue'
+                        )}
+                    </Button>
+                </div> */}
+
+                <div className="flex gap-2">
+                    <Button variant="outline" onClick={handleBackStep} className="flex-1">Back</Button>
+
+                    <Button onClick={handleSearchUser} disabled={gettingUserLoading} className=" text-white flex-1"
+                    >
+                        {gettingUserLoading ? (
+                            <>
+                                <LoadingSpinner size="sm" className="mr-2 " />
                                 Processing...
                             </>
                         ) : (

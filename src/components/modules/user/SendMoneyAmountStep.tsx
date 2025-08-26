@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { AlertCircle } from "lucide-react";
 
 interface IProps {
@@ -11,10 +12,11 @@ interface IProps {
     amount: string,
     setAmount: (value: string) => void,
     errors: any,
+    isWalletLoading: boolean,
     handleNextStep: () => void
 }
 
-const SendMoneyAmountStep = ({ walletBalance, amount, setAmount, errors, handleNextStep }: IProps) => {
+const SendMoneyAmountStep = ({ isWalletLoading, walletBalance, amount, setAmount, errors, handleNextStep }: IProps) => {
     return (
         <Card className="w-full max-w-md mx-auto bg-card/70">
             <CardHeader>
@@ -24,12 +26,20 @@ const SendMoneyAmountStep = ({ walletBalance, amount, setAmount, errors, handleN
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
-                    <p className="text-2xl font-bold text-green-600">৳
-                        {walletBalance?.toLocaleString()}
-                    </p>
-                </div>
+                {isWalletLoading ?
+                    (<div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        {/* Label skeleton */}
+                        <Skeleton className="h-4 w-28 mx-auto mb-2" />
+
+                        {/* Balance skeleton */}
+                        <Skeleton className="h-7 w-20 mx-auto rounded-md" />
+                    </div>) :
+                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
+                        <p className="text-2xl font-bold text-green-600">৳
+                            {walletBalance?.toLocaleString()}
+                        </p>
+                    </div>}
 
                 <div className="space-y-2">
                     <Label htmlFor="amount">Send Money Amount (৳)</Label>
