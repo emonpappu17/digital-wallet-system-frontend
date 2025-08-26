@@ -134,6 +134,56 @@ export function LoginForm({
     })
 
 
+    // const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    //     try {
+    //         // api call
+    //         const { identifier, password } = values;
+    //         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //         const isEmail = emailRegex.test(identifier);
+
+    //         const payload = isEmail ? { email: identifier, password } : { phoneNumber: identifier, password }
+
+    //         const res = await login(payload).unwrap();
+
+    //         // if (res?.data?.user?.role === IRole.AGENT) {
+    //         //     navigate("/agent")
+    //         //     toast.success("Welcome to Agent Dashboard")
+    //         // }
+    //         // if (res?.data?.user?.role === IRole.USER) {
+    //         //     navigate("/user")
+    //         //     toast.success("Welcome to User Dashboard")
+    //         // }
+    //         // if (res?.data?.user?.role === IRole.ADMIN) {
+    //         //     navigate("/admin")
+    //         //     toast.success("Welcome to Admin Dashboard")
+    //         // }
+    //         const role = res?.data?.user?.role;
+    //         if (role === IRole.AGENT) {
+    //             navigate("/agent");
+    //             toast.success("Welcome to Agent Dashboard");
+    //         } else if (role === IRole.USER) {
+    //             navigate("/user");
+    //             toast.success("Welcome to User Dashboard");
+    //         } else if (role === IRole.ADMIN) {
+    //             navigate("/admin");
+    //             toast.success("Welcome to Admin Dashboard");
+    //         } else {
+    //             navigate("/unauthorized");
+    //             toast.error("Unauthorized access");
+    //         }
+
+    //         console.log("res login==>", res);
+
+    //         console.log('res login==>', res);
+    //         // toast.success("Logged in Successful!!")
+    //         // navigate("/")
+    //     } catch (err: any) {
+    //         console.error("Login failed", err);
+    //         toast.error(err?.data.message || "Login failed. Try again.");
+    //     }
+    // };
+
+
     const onSubmit = async (values: z.infer<typeof loginSchema>) => {
         try {
             // api call
@@ -141,31 +191,34 @@ export function LoginForm({
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             const isEmail = emailRegex.test(identifier);
 
-            const payload = isEmail ? { email: identifier, password } : { phoneNumber: identifier, password }
+            const payload = isEmail
+                ? { email: identifier, password }
+                : { phoneNumber: identifier, password };
 
             const res = await login(payload).unwrap();
+            const role = res?.data?.user?.role;
 
-            if (res?.data?.user?.role === IRole.AGENT) {
-                navigate("/agent/cash-in")
-                toast.success("Welcome to Agent Dashboard")
-            }
-            if (res?.data?.user?.role === IRole.USER) {
-                navigate("/user/deposit")
-                toast.success("Welcome to User Dashboard")
-            }
-            if (res?.data?.user?.role === IRole.ADMIN) {
-                navigate("/admin/users")
-                toast.success("Welcome to Admin Dashboard")
+            if (role === IRole.AGENT) {
+                navigate("/agent");
+                toast.success("Welcome to Agent Dashboard");
+            } else if (role === IRole.USER) {
+                navigate("/user");
+                toast.success("Welcome to User Dashboard");
+            } else if (role === IRole.ADMIN) {
+                navigate("/admin");
+                toast.success("Welcome to Admin Dashboard");
+            } else {
+                navigate("/unauthorized");
+                toast.error("Unauthorized access");
             }
 
-            console.log('res login==>', res);
-            // toast.success("Logged in Successful!!")
-            // navigate("/")
+            console.log("res login==>", res);
         } catch (err: any) {
             console.error("Login failed", err);
-            toast.error(err?.data.message || "Login failed. Try again.");
+            toast.error(err?.data?.message || "Login failed. Try again.");
         }
     };
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
 
