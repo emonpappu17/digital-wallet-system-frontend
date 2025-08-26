@@ -11,10 +11,12 @@ import FeaturesPage from "@/pages/public/FeaturesPage";
 import HomePage from "@/pages/public/HomePage";
 import PricingPage from "@/pages/public/PricingPage";
 import { generateRoutes } from "@/utils/genarateRoutes";
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { userSidebarItems } from "./userSidebarItems";
 import { agentSidebarItems } from "./agentSidebarItems";
 import { adminSidebarItems } from "./adminSIdebarItems";
+import { commonAdminSidebarItems, commonAgentSidebarItems, commonUserSidebarItems } from "./commonSidebarItems";
+// import { commonUserSidebarItems } from "./commonUserSidebarItems";
 
 
 export const router = createBrowserRouter([
@@ -56,21 +58,42 @@ export const router = createBrowserRouter([
                 index: true,
                 Component: DashboardPage
             },
-            ...generateRoutes(userSidebarItems)
+            ...generateRoutes(userSidebarItems),
+            ...generateRoutes(commonUserSidebarItems)
+
+            //         { index: true, element: <Navigate to={ "/user/dashboard"} /> },
+            // ...generateRoutes(userSidebarItems)
         ]
+
+        //         path: "/admin",
+        //         Component: DashboardLayout,
+        //         children: [
+        //             { index: true, element: <Navigate to={ "/admin/analytics"} /> },
+        //     ...generateRoutes(adminSidebarItems)
+        // ]
     },
     {
         path: "/admin",
         Component: DashboardLayout,
         children: [
-            ...generateRoutes(adminSidebarItems)
+            {
+                index: true,
+                Component: DashboardPage
+            },
+            ...generateRoutes(adminSidebarItems),
+            ...generateRoutes(commonAdminSidebarItems)
         ]
     },
     {
         path: "/agent",
         Component: DashboardLayout,
         children: [
-            ...generateRoutes(agentSidebarItems)
+            {
+                index: true,
+                Component: DashboardPage
+            },
+            ...generateRoutes(agentSidebarItems),
+            ...generateRoutes(commonAgentSidebarItems),
         ]
     },
     {

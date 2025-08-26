@@ -1,4 +1,4 @@
-import Demo from '@/pages/dashboard/user/Demo';
+// import Demo from '@/pages/dashboard/user/Demo';
 import DepositPage from '@/pages/dashboard/user/DepositPage';
 import SendMoneyPage from '@/pages/dashboard/user/SendMoneyPage';
 
@@ -30,10 +30,10 @@ export const userSidebarItems = [
         icon: Send,
         component: SendMoneyPage
     },
-    {
-        title: "demo Send Money",
-        url: "/user/demo",
-        icon: Send,
-        component: Demo
-    },
+    // {
+    //     title: "demo Send Money",
+    //     url: "/user/demo",
+    //     icon: Send,
+    //     component: Demo
+    // },
 ]

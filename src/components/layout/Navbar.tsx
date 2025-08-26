@@ -25,21 +25,26 @@ import {
 import { LogOut, Settings, User } from "lucide-react"
 import { useAppDispatch } from "@/redux/hook"
 
-const navigationLinks = [
-    { to: "/", label: "Home" },
-    { to: "/about", label: "About" },
-    { to: "/features", label: "Features" },
-    { to: "/pricing", label: "Pricing" },
-    { to: "/contact", label: "Contact" },
-    { to: "/faq", label: "FAQ" },
-    { to: "/user", label: "Dashboard" },
-]
+
 
 export default function Navbar() {
     const { data, isLoading } = useUserProfileQuery(undefined);
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
     console.log('user profile==>', data);
+
+    const currentRole = data?.data?.role
+    const dashboardRoute = currentRole === "ADMIN" ? "admin" : currentRole === "USER" ? "user" : "agent"
+
+    const navigationLinks = [
+        { to: "/", label: "Home" },
+        { to: "/about", label: "About" },
+        { to: "/features", label: "Features" },
+        { to: "/pricing", label: "Pricing" },
+        { to: "/contact", label: "Contact" },
+        { to: "/faq", label: "FAQ" },
+        { to: `/${dashboardRoute}`, label: "Dashboard" },
+    ]
 
     const handleLogout = async () => {
         await logout(undefined)
