@@ -1,5 +1,5 @@
 import CashInPage from '@/pages/dashboard/agent/CashInPage';
-import CashOutPage from '@/pages/dashboard/agent/CashOutPage';
+// import CashOutPage from '@/pages/dashboard/agent/CashOutPage';
 import { ISidebarItem } from '@/types';
 
 import {
@@ -14,10 +14,10 @@ export const agentSidebarItems: ISidebarItem[] = [
         icon: ArrowDownLeft,
         component: CashInPage
     },
-    {
-        title: "Cash out",
-        url: "/agent/cash-out",
-        icon: ArrowUpRight,
-        component: CashOutPage
-    },
+    // {
+    //     title: "Cash out",
+    //     url: "/agent/cash-out",
+    //     icon: ArrowUpRight,
+    //     component: CashOutPage
+    // },
 ]

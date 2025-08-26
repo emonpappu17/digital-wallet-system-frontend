@@ -1,14 +1,12 @@
 import Demo from '@/pages/dashboard/user/Demo';
 import DepositPage from '@/pages/dashboard/user/DepositPage';
 import SendMoneyPage from '@/pages/dashboard/user/SendMoneyPage';
-import WithdrawPage from '@/pages/dashboard/user/WithdrawPage';
 
+import CashOutPage from '@/pages/dashboard/user/CashOutPage';
 import {
-    ArrowUpRight,
     ArrowDownLeft,
-    Send,
     Plus,
-    Minus,
+    Send
 } from 'lucide-react';
 
 export const userSidebarItems = [
@@ -20,11 +18,11 @@ export const userSidebarItems = [
         component: DepositPage
     },
     {
-        title: "Withdraw",
-        url: "/user/withdraw",
-        icon: Minus,
-        // icon: ArrowDownLeft,
-        component: WithdrawPage
+        title: "Cash Out",
+        url: "/user/cash-out",
+        // icon: Minus,
+        icon: ArrowDownLeft,
+        component: CashOutPage
     },
     {
         title: "Send Money",

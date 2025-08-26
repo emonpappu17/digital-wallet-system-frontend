@@ -9,53 +9,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { useDepositMoneyMutation } from '@/redux/features/transactionApi';
 import { useGetMyWalletQuery } from '@/redux/features/walletApi';
-import { AlertCircle, ArrowLeft, BadgeCheckIcon, CheckCircle, Clock, MapPin, Phone, RefreshCw, Search, Star, User } from 'lucide-react';
+import { handleFormateDate } from '@/utils/handleFormateDate';
+import { AlertCircle, ArrowLeft, BadgeCheckIcon, CheckCircle, RefreshCw, User } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
-// Mock data for agents
-const mockAgents = [
-    {
-        id: 'agent1',
-        name: 'Rahman Store',
-        phone: '+880171234567',
-        location: 'Dhanmondi 27',
-        distance: '0.5 km',
-        rating: 4.8,
-        totalTransactions: 1250,
-        isOnline: true,
-        avatar: '/api/placeholder/40/40'
-    },
-    {
-        id: 'agent2',
-        name: 'City Mobile Center',
-        phone: '+880181234567',
-        location: 'Mirpur 10',
-        distance: '1.2 km',
-        rating: 4.6,
-        totalTransactions: 980,
-        isOnline: true,
-        avatar: '/api/placeholder/40/40'
-    },
-    {
-        id: 'agent3',
-        name: 'Digital Point',
-        phone: '+880191234567',
-        location: 'Uttara Sector 7',
-        distance: '2.1 km',
-        rating: 4.9,
-        totalTransactions: 2100,
-        isOnline: false,
-        avatar: '/api/placeholder/40/40'
-    }
-];
-
-// Mock user data
-const mockUser = {
-    name: 'John Doe',
-    phone: '+880123456789',
-    balance: 1250.50
-};
 
 interface IError {
     amount?: string
@@ -66,16 +23,15 @@ const DepositMoneyPage = () => {
     const [currentStep, setCurrentStep] = useState(1);
     const [amount, setAmount] = useState('');
     const [errors, setErrors] = useState<IError>({});
-    const [searchTerm, setSearchTerm] = useState('');
 
     // API Calls
-    const { data, refetch, isLoading: isWalletLoading } = useGetMyWalletQuery(undefined);
+    const { data, refetch, } = useGetMyWalletQuery(undefined);
     const [depositMoney, { isLoading: depositLoading, data: getDepositData }] = useDepositMoneyMutation();
 
     // Data
     const walletBalance = data?.data?.balance;
     const depositMoneyData = getDepositData?.data;
-    const remainingBalance = Number(walletBalance) - Number(amount);
+    // const remainingBalance = Number(walletBalance) - Number(amount);
 
     // Validate amount
     const validateAmount = (value: string) => {
@@ -214,8 +170,8 @@ const DepositMoneyPage = () => {
         </Card>
     );
 
-  
-    // Step 3: Confirmation
+
+    // Step 2: Confirmation
     const renderConfirmationStep = () => (
         <Card className="w-full max-w-md mx-auto">
             <CardHeader>
@@ -284,7 +240,7 @@ const DepositMoneyPage = () => {
         </Card>
     );
 
-    // Step 4: Success/Processing
+    // Step 3: Success/Processing
     const renderSuccessStep = () => (
         <Card className="w-full max-w-md mx-auto">
             <CardContent className="pt-6">
@@ -302,6 +258,10 @@ const DepositMoneyPage = () => {
 
                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-left">
                         <div className="space-y-2">
+                            <div className="flex justify-between">
+                                <span>Time</span>
+                                <span className="font-mono">{handleFormateDate(depositMoneyData?.createdAt)}</span>
+                            </div>
                             <div className="flex justify-between text-sm">
                                 <span>Transaction ID:</span>
                                 <span className="font-mono font-semibold">{depositMoneyData.transactionId}</span>

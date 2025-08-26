@@ -39,6 +39,13 @@ export const authApi = baseApi.injectEndpoints({
                 data: userInfo
             })
         }),
+        getAgent: builder.mutation({
+            query: (agentInfo) => ({
+                url: "/agent-requests/get-agent",
+                method: "POST",
+                data: agentInfo
+            })
+        }),
         userProfile: builder.query({
             query: () => ({
                 url: "/user/me",
@@ -50,4 +57,4 @@ export const authApi = baseApi.injectEndpoints({
     })
 })
 
-export const { useUserProfileQuery, useLogoutMutation, useLoginMutation, useRegisterUserMutation, useRegisterAgentMutation, useGetUserMutation } = authApi;
+export const { useGetAgentMutation, useUserProfileQuery, useLogoutMutation, useLoginMutation, useRegisterUserMutation, useRegisterAgentMutation, useGetUserMutation } = authApi;

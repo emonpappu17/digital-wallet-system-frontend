@@ -1,14 +1,10 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { parseISO, format } from 'date-fns';
+import { handleFormateDate } from '@/utils/handleFormateDate';
 import { BadgeCheckIcon, CheckCircle } from 'lucide-react';
 
-const handleFormateDate = (v: string) => {
-    console.log(v);
-    const date = parseISO(v);
-    return format(date, "h:mma dd/MM/yy").toLowerCase();
-}
+
 
 interface IProps {
     amount: string,
