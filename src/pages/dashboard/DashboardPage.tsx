@@ -1,10 +1,16 @@
-import DemoAgent from "./user/DemoAgent";
+import { useUserProfileQuery } from "@/redux/features/authApi";
 import UserDashboardPage from "./user/UserDashboardPage";
+import AgentDashboardPage from "./agent/AgentDashboardPage";
 
 const DashboardPage = () => {
+    const { data } = useUserProfileQuery(undefined);
+    const role = data?.data?.role
     return (
         <div>
-            <UserDashboardPage></UserDashboardPage>
+            {role === "AGENT" && <AgentDashboardPage />}
+            {role === "ADMIN" && <UserDashboardPage />}
+            {role === "USER" && <UserDashboardPage></UserDashboardPage>}
+
             {/* <DemoAgent></DemoAgent> */}
         </div>
     );

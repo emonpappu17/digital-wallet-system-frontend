@@ -99,7 +99,7 @@ const DepositMoneyPage = () => {
 
     // Step 1: Enter Amount
     const renderAmountStep = () => (
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="w-full max-w-md mx-auto bg-card/70">
             <CardHeader>
                 <CardTitle className="text-center">Deposit Money</CardTitle>
                 <CardDescription className="text-center">
@@ -173,7 +173,7 @@ const DepositMoneyPage = () => {
 
     // Step 2: Confirmation
     const renderConfirmationStep = () => (
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="w-full max-w-md mx-auto bg-card/70">
             <CardHeader>
                 <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" onClick={handleBackStep}>
@@ -242,7 +242,7 @@ const DepositMoneyPage = () => {
 
     // Step 3: Success/Processing
     const renderSuccessStep = () => (
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="w-full max-w-md mx-auto bg-card/70">
             <CardContent className="pt-6">
                 <div className="text-center space-y-4">
                     <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
@@ -308,7 +308,7 @@ const DepositMoneyPage = () => {
     );
 
     return (
-        <div className="min-h-screen bg-card/50 p-4">
+        <div className="min-h-screen bg-card/40 p-4">
             <div className="max-w-4xl mx-auto">
                 {/* Progress indicator */}
                 <div className="mb-8">

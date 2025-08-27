@@ -29,7 +29,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation().pathname;
   // console.log('location=>', location);
   const { data: profile } = useUserProfileQuery(undefined);
-  console.log(profile?.data?.role);
   const items = getSidebarItems(profile?.data?.role)
   // const commonItems = getSidebarItems("COMMON")
 
