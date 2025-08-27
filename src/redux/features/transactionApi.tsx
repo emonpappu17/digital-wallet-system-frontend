@@ -8,7 +8,7 @@ export const transactionApi = baseApi.injectEndpoints({
                 method: "POST",
                 data: receiverData
             }),
-            invalidatesTags: ["WALLET"]
+            invalidatesTags: ["WALLET", "USER"]
         }),
         cashOut: builder.mutation({
             query: (agentData) => ({
@@ -16,7 +16,7 @@ export const transactionApi = baseApi.injectEndpoints({
                 method: "POST",
                 data: agentData
             }),
-            invalidatesTags: ["WALLET"]
+            invalidatesTags: ["WALLET", "USER"]
         }),
 
         depositMoney: builder.mutation({
@@ -25,7 +25,7 @@ export const transactionApi = baseApi.injectEndpoints({
                 method: "POST",
                 data: receiverData
             }),
-            invalidatesTags: ["WALLET"]
+            invalidatesTags: ["WALLET", "USER"]
         }),
         cashIn: builder.mutation({
             query: (userData) => ({
@@ -33,7 +33,7 @@ export const transactionApi = baseApi.injectEndpoints({
                 method: "POST",
                 data: userData
             }),
-            invalidatesTags: ["WALLET"]
+            invalidatesTags: ["WALLET", "USER"]
         }),
 
     })

@@ -403,50 +403,19 @@ const CashOutPage = () => {
 
         {/* Step content */}
         {currentStep === 1 &&
-          // <SendMoneyAmountStep
-          //   isWalletLoading={isWalletLoading}
-          //   amount={amount}
-          //   errors={errors}
-          //   handleNextStep={handleNextStep}
-          //   setAmount={setAmount}
-          //   walletBalance={walletBalance}
-          // />
           moneyAmountStep()
         }
 
         {currentStep === 2 &&
           agentSearchStep()
-          // <ReceiverSelectionStep
-          //   amount={amount}
-          //   gettingUserLoading={gettingUserLoading}
-          //   handleBackStep={handleBackStep}
-          //   handleSearchUser={handleSearchUser}
-          //   setSearchTerm={setSearchTerm}
-          // />
         }
 
         {currentStep === 3 &&
-          // <SendMoneyConfirmStep
-          //   amount={amount}
-          //   handleBackStep={handleBackStep}
-          //   handleSendMoney={handleSendMoney}
-          //   receiverData={receiverData}
-          //   remainingBalance={remainingBalance}
-          //   sendMoneyLoading={sendMoneyLoading}
-          // />
           moneyConfirmStep()
         }
 
         {currentStep === 4 &&
           successStep()
-          // <SendMoneySuccessStep
-
-          //   amount={amount}
-          //   handleSendAgain={handleSendAgain}
-          //   receiverData={receiverData}
-          //   sendMoneyData={sendMoneyData}
-          //   walletBalance={walletBalance}
-          // />
         }
       </div>
     </div>

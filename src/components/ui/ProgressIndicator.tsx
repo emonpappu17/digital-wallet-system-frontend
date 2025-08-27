@@ -1,6 +1,8 @@
 // import React from 'react';
-
-const ProgressIndicator = ({ currentStep }) => {
+interface ProgressIndicatorProps {
+    currentStep: number;
+}
+const ProgressIndicator = ({ currentStep }: ProgressIndicatorProps) => {
     return (
         <div className="mb-8">
             <div className="flex items-center justify-center space-x-8">

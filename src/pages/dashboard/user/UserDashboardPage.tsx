@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import DashboardHomeTableSkeleton from "@/components/ui/DashboardHomeTableSkeleton";
 import QuickActions from "@/components/ui/QuickActions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserStatsQuery } from "@/redux/features/userApi";
@@ -8,10 +9,10 @@ import { handleFormateDate } from "@/utils/handleFormateDate";
 import { Activity, ArrowDownLeft, ArrowUpRight, Clock, CreditCard, DollarSign, Eye, EyeOff, Filter, Send, TrendingUp, User } from "lucide-react";
 import { useState } from "react";
 
-type ITnxType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY"
+type ITnxType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY" | "ADD_MONEY"
 export type UserRole = "USER" | "AGENT";
 export type TransactionDirection = "SENT" | "RECEIVED";
-type MappedType = "DEPOSIT" | "WITHDRAW" | "SEND" | "RECEIVE";
+type MappedType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY" ;
 
 export interface ITransaction {
   _id: string;
@@ -45,32 +46,15 @@ const UserDashboardPage = () => {
   const wallet = data?.data?.wallet;
   const transactions = data?.data?.transaction || [];
 
-  const LoadingSkeleton = () => (
-    <div className="space-y-4">
-      {Array.from({ length: 7 }).map((_, i) => (
-        <div key={i} className="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-800 rounded-lg animate-pulse">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded-lg"></div>
-            <div>
-              <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-              <div className="h-3 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
-            </div>
-          </div>
-          <div className="text-right">
-            <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
-            <div className="h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded"></div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  console.log(transactions);
 
   // Helper functions for transactions
   const mapTransactionType = (type: ITnxType): MappedType => {
     const typeMap: Record<ITnxType, MappedType> = {
-      'CASH_IN': 'DEPOSIT',
-      'CASH_OUT': 'WITHDRAW',
-      'SEND_MONEY': 'SEND'
+      'CASH_IN': 'CASH_IN',
+      'CASH_OUT': 'CASH_OUT',
+      'SEND_MONEY': 'SEND_MONEY',
+      "ADD_MONEY": "CASH_IN"
     };
     return typeMap[type] || type;
   };
@@ -78,10 +62,10 @@ const UserDashboardPage = () => {
   const getTransactionIcon = (type: ITnxType) => {
     const mappedType = mapTransactionType(type);
     const icons = {
-      DEPOSIT: ArrowDownLeft,
-      WITHDRAW: ArrowUpRight,
-      SEND: Send,
-      RECEIVE: ArrowDownLeft
+      CASH_IN: ArrowDownLeft,
+      CASH_OUT: ArrowUpRight,
+      SEND_MONEY: Send,
+      // CASH_IN: ArrowDownLeft
     };
     const Icon = icons[mappedType] || Activity;
     return <Icon className="h-4 w-4" />;
@@ -90,10 +74,10 @@ const UserDashboardPage = () => {
   const getTransactionColor = (type: ITnxType) => {
     const mappedType = mapTransactionType(type);
     const colors = {
-      DEPOSIT: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
-      WITHDRAW: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
-      SEND: "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
-      RECEIVE: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+      CASH_IN: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
+      CASH_OUT: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+      SEND_MONEY: "bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
+      // RECEIVE: "bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400"
     };
     return colors[mappedType] || "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400";
   };
@@ -233,7 +217,7 @@ const UserDashboardPage = () => {
         <CardContent className="space-y-6">
           {/* Transaction List */}
           {loading ? (
-            <LoadingSkeleton />
+            <DashboardHomeTableSkeleton />
           ) : transactions.length === 0 ? (
             <div className="text-center py-8 text-gray-500 dark:text-gray-400">
               <Filter className="h-8 w-8 mx-auto mb-2 opacity-50" />

@@ -68,8 +68,16 @@ export const userApi = baseApi.injectEndpoints({
                 params
             }),
             providesTags: ['USER']
+        }),
+        getAllUsersStats: builder.query({
+            query: (params) => ({
+                url: "/admin/all-user-stats",
+                method: "GET",
+                params
+            }),
+            providesTags: ['USER']
         })
     })
 })
 
-export const { useGetAgentStatsQuery, useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation, useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation, useGetUserStatsQuery } = userApi;
+export const { useGetAllUsersStatsQuery, useGetAgentStatsQuery, useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation, useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation, useGetUserStatsQuery } = userApi;
