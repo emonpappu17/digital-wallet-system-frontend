@@ -106,7 +106,7 @@ const UsersPage = () => {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-2 md:p-4">
             {/* Header + Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="md:col-span-2">
+                <Card className="md:col-span-2 bg-card/40">
                     <CardHeader>
                         <CardTitle>Manage Users</CardTitle>
                         <CardDescription>Block, Unblock, and review users — track volumes and performance.</CardDescription>
@@ -154,7 +154,7 @@ const UsersPage = () => {
                 </Card>
 
                 {/* Filters Card */}
-                <Card className="w-full">
+                <Card className="w-full bg-card/40">
                     <CardHeader>
                         <CardTitle>Filters</CardTitle>
                         <CardDescription>Search and narrow results</CardDescription>
@@ -240,7 +240,7 @@ const UsersPage = () => {
             </div>
 
             {/* Users Table */}
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden bg-card/40">
                 <CardHeader>
                     <CardTitle>Users List</CardTitle>
                     <CardDescription>Block or Unblock users. Click an user to view details.</CardDescription>

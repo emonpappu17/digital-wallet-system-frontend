@@ -127,7 +127,7 @@ export default function AgentsPage() {
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6 p-2 md:p-4">
             {/* Header + Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="md:col-span-2">
+                <Card className="md:col-span-2 bg-card/40">
                     <CardHeader>
                         <CardTitle>Manage Agents</CardTitle>
                         <CardDescription>Approve, suspend, and review agents — track volumes and performance.</CardDescription>
@@ -180,7 +180,7 @@ export default function AgentsPage() {
                 </Card>
 
                 {/* Filters Card */}
-                <Card className="w-full">
+                <Card className="w-full bg-card/40">
                     <CardHeader>
                         <CardTitle>Filters</CardTitle>
                         <CardDescription>Search and narrow results</CardDescription>
@@ -267,7 +267,7 @@ export default function AgentsPage() {
             </div>
 
             {/* Agents Table */}
-            <Card className="overflow-hidden">
+            <Card className="overflow-hidden bg-card/40">
                 <CardHeader>
                     <CardTitle>Agents List</CardTitle>
                     <CardDescription>Approve or suspend agents. Click an agent to view details.</CardDescription>

@@ -133,7 +133,7 @@ const CashInPage = () => {
 
     // Step-1
     const moneyAmountStep = () => {
-        return <Card className="w-full max-w-md mx-auto bg-card/70">
+        return <Card className="w-full max-w-md mx-auto bg-card/70 ">
             <CardHeader>
                 <CardTitle className="text-center">Cash In</CardTitle>
                 <CardDescription className="text-center">

@@ -5,7 +5,7 @@ import QuickActions from "@/components/ui/QuickActions";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetUserStatsQuery } from "@/redux/features/userApi";
 import { handleFormateDate } from "@/utils/handleFormateDate";
-import { Activity, ArrowDownLeft, ArrowUpRight, Clock, CreditCard, DollarSign, Eye, EyeOff, Filter, RefreshCw, Send, TrendingUp, User } from "lucide-react";
+import { Activity, ArrowDownLeft, ArrowUpRight, Clock, CreditCard, DollarSign, Eye, EyeOff, Filter, Send, TrendingUp, User } from "lucide-react";
 import { useState } from "react";
 
 type ITnxType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY"
@@ -223,7 +223,7 @@ const UserDashboardPage = () => {
             <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
               <Activity className="h-5 w-5 text-gray-600 dark:text-gray-400" />
             </div>
-            Recent 7 Transactions
+            Recent some transactions
           </CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-400">
             Review your latest activity
