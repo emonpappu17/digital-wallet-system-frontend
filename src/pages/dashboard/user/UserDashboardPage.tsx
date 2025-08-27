@@ -109,15 +109,6 @@ const UserDashboardPage = () => {
                 Your wallet overview and recent activity
               </CardDescription>
             </div>
-            {/* <Button
-              variant="outline"
-              size="sm"
-              onClick={refetch}
-              className="gap-2 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Refresh
-            </Button> */}
           </div>
         </CardHeader>
 

@@ -33,7 +33,6 @@ const CashOutPage = () => {
   // API Calls
   const { data, refetch, isLoading: isWalletLoading } = useGetMyWalletQuery(undefined);
   const { data: getSenderData } = useUserProfileQuery(undefined);
-  // const [getUser, { isLoading: gettingUserLoading, data: getUserData }] = useGetUserMutation();
   const [getAgent, { isLoading: gettingUserLoading, data: getAgentData }] = useGetAgentMutation();
   const [cashOut, { isLoading: cashOutLoading, data: getCashOutData }] = useCashOutMutation();
 
@@ -134,7 +133,6 @@ const CashOutPage = () => {
 
   const remainingBalance = Number(walletBalance) - Number(totalDeduction);
 
-  // console.log(totalDeduction);
 
   // Step-1
   const moneyAmountStep = () => {

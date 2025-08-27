@@ -425,7 +425,7 @@ export default function AgentsPage() {
                                     {/* Previous page button */}
                                     <PaginationItem>
                                         <PaginationPrevious
-                                            className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50"
+                                            className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50 select-none"
                                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                                             aria-disabled={currentPage === 1 ? true : undefined}
                                             role={currentPage === 1 ? "link" : undefined}
@@ -444,6 +444,7 @@ export default function AgentsPage() {
                                         <PaginationItem
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
+                                            className="cursor-pointer select-none"
                                         >
                                             <PaginationLink
                                                 isActive={currentPage === page}
@@ -463,7 +464,7 @@ export default function AgentsPage() {
                                     {/* Next page button */}
                                     <PaginationItem>
                                         <PaginationNext
-                                            className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer"
+                                            className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer select-none"
                                             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                                             aria-disabled={currentPage === totalPages ? true : undefined}
                                             role={currentPage === totalPages ? "link" : undefined}

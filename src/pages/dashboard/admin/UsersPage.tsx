@@ -356,7 +356,7 @@ const UsersPage = () => {
                 <div className="mt-4">
                     <div className="flex justify-between items-center">
                         {/* Results per page */}
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3 bg-card/5">
                             <Select
                                 defaultValue={String(limit)}
                                 onValueChange={(value) => {
@@ -388,7 +388,7 @@ const UsersPage = () => {
                                     {/* Previous page button */}
                                     <PaginationItem>
                                         <PaginationPrevious
-                                            className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50"
+                                            className="aria-disabled:pointer-events-none cursor-pointer aria-disabled:opacity-50 select-none"
                                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                                             aria-disabled={currentPage === 1 ? true : undefined}
                                             role={currentPage === 1 ? "link" : undefined}
@@ -407,6 +407,7 @@ const UsersPage = () => {
                                         <PaginationItem
                                             key={page}
                                             onClick={() => setCurrentPage(page)}
+                                            className="cursor-pointer select-none"
                                         >
                                             <PaginationLink
                                                 isActive={currentPage === page}
@@ -426,7 +427,7 @@ const UsersPage = () => {
                                     {/* Next page button */}
                                     <PaginationItem>
                                         <PaginationNext
-                                            className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer"
+                                            className="aria-disabled:pointer-events-none aria-disabled:opacity-50 cursor-pointer select-none"
                                             onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                                             aria-disabled={currentPage === totalPages ? true : undefined}
                                             role={currentPage === totalPages ? "link" : undefined}
