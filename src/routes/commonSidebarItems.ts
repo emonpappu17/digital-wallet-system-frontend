@@ -5,8 +5,8 @@ import TransactionsPage from '@/pages/dashboard/TransactionsPage';
 import { ISidebarItem } from '@/types';
 
 import {
-    ArrowDownLeft,
     History,
+    Home,
     User
 } from 'lucide-react';
 
@@ -14,7 +14,7 @@ export const commonUserSidebarItems: ISidebarItem[] = [
     {
         title: "Dashboard",
         url: "/user",
-        icon: ArrowDownLeft,
+        icon: Home,
         component: DashboardPage
     },
     {
@@ -34,7 +34,7 @@ export const commonAgentSidebarItems: ISidebarItem[] = [
     {
         title: "Dashboard",
         url: "/agent",
-        icon: ArrowDownLeft,
+        icon: Home,
         component: DashboardPage
     },
     {
@@ -54,7 +54,7 @@ export const commonAdminSidebarItems: ISidebarItem[] = [
     {
         title: "Dashboard",
         url: "/admin",
-        icon: ArrowDownLeft,
+        icon: Home,
         component: DashboardPage
     },
     {

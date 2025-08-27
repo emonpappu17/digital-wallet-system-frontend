@@ -1,8 +1,11 @@
+import DemoAgent from "./user/DemoAgent";
+import UserDashboardPage from "./user/UserDashboardPage";
 
 const DashboardPage = () => {
     return (
         <div>
-            Dashboard home
+            <UserDashboardPage></UserDashboardPage>
+            {/* <DemoAgent></DemoAgent> */}
         </div>
     );
 };

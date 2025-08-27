@@ -51,7 +51,7 @@ export default function Navbar() {
         dispatch(authApi.util.resetApiState())
     }
     return (
-        <header className="border-b px-4 md:px-6 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header className="border-b z-50 px-4 md:px-6 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="flex h-16 items-center justify-between gap-4 container mx-auto ">
                 {/* Left side */}
                 <div className="flex items-center ">
