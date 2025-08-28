@@ -25,8 +25,11 @@ import { ChevronDownIcon, CircleXIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { ITransaction } from "./AdminDashboardPage";
-import { Charts } from "@/components/modules/admin/Charts";
+import Component, { Charts } from "@/components/modules/admin/Charts";
+// import { Charts } from "@/components/modules/admin/Charts";
 // import Charts from "@/components/modules/admin/Charts";
+// // import { Charts } from "@/components/modules/admin/Charts";
+// // import Charts from "@/components/modules/admin/Charts";
 
 type TType = "CASH_IN" | "CASH_OUT" | "ADD_MONEY" | "SEND_MONEY"
 
@@ -51,6 +54,7 @@ const AdminTransactionPage = () => {
     // Data
     const totalPages = data?.meta?.totalPages || 1;
     const transactions = data?.data?.transactions?.list || [];
+    const chartData = data?.data?.charts || []
 
     //Pagination
     const { pages, showLeftEllipsis, showRightEllipsis } = usePagination({
@@ -74,6 +78,8 @@ const AdminTransactionPage = () => {
     }
     return (
         <div>
+            <Charts chartData={chartData}></Charts>
+
             {/* Filters */}
             <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-3 gap-3">
                 {/*  Search */}
@@ -86,7 +92,7 @@ const AdminTransactionPage = () => {
                                 setSearch(e.target.value);
                                 setCurrentPage(1);
                             }}
-                            placeholder="Search by name or phone..."
+                            placeholder="Search name, phone amount..."
                         />
                         <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3">
                             <Search size={16} aria-hidden="true" />
@@ -370,9 +376,12 @@ const AdminTransactionPage = () => {
             )}
 
 
+            {/* <Charts></Charts>
+             */}
+            {/* <Component chartData={chartData}></Component> */}
             {/* <Charts></Charts> */}
-
         </div>
+
     );
 };
 
