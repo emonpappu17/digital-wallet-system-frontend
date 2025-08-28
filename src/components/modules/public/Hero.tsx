@@ -11,6 +11,7 @@ import {
     Users,
     Zap
 } from 'lucide-react';
+import { Link } from 'react-router';
 
 const HeroSection = () => {
     const features = [
@@ -81,20 +82,25 @@ const HeroSection = () => {
 
                     {/* CTA Buttons */}
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-                        <Button
-                            size="lg"
-                            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                        >
-                            Get Started Today
-                            <ArrowRight className="ml-2 w-5 h-5" />
-                        </Button>
-                        <Button
-                            variant="outline"
-                            size="lg"
-                            className="px-8 py-4 text-lg font-semibold border-2 border-gray-300 dark:border-slate-700 dark:hover:bg-slate-800 transition-all duration-300"
-                        >
-                            Learn More
-                        </Button>
+                        <Link to={"/login"}>
+                            <Button
+
+                                size="lg"
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                            >
+                                Get Started Today
+                                <ArrowRight className="ml-2 w-5 h-5" />
+                            </Button>
+                        </Link>
+                        <Link to={"/about"}>
+                            <Button
+                                variant="outline"
+                                size="lg"
+                                className="px-8 py-4 text-lg font-semibold border-2 border-gray-300 dark:border-slate-700 dark:hover:bg-slate-800 transition-all duration-300"
+                            >
+                                Learn More
+                            </Button>
+                        </Link>
                     </div>
 
                     {/* Stats Cards */}

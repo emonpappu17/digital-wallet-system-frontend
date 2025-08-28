@@ -126,7 +126,7 @@ export default function ContactPage() {
                                             className="mt-1 min-h-[120px]"
                                         />
                                     </div>
-                                    <Button type="submit" className="w-full">
+                                    <Button type="submit" className="w-full text-white">
                                         Submit Inquiry
                                     </Button>
                                 </form>

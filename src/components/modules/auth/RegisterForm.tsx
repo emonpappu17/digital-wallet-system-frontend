@@ -351,7 +351,7 @@ const RegisterForm = ({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full max-w-md">
-                <Card>
+                <Card className="bg-card/45">
                     <CardHeader>
                         <CardTitle>Create Account</CardTitle>
                         <CardDescription>Join PayWave — fast and secure wallet.</CardDescription>

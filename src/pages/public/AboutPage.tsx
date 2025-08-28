@@ -14,6 +14,7 @@ import {
     Smartphone,
     Globe
 } from "lucide-react";
+import { Link } from "react-router";
 
 export default function AboutPage() {
     const team = [
@@ -111,7 +112,7 @@ export default function AboutPage() {
                             </div>
 
                             <div className="mt-6 flex gap-3">
-                                <Button>Get Started</Button>
+                                <Link to={"/login"}> <Button className="text-white">Get Started</Button></Link>
                                 <Button variant="ghost">Contact Sales</Button>
                             </div>
                         </CardContent>
@@ -169,7 +170,7 @@ export default function AboutPage() {
                                     </div>
 
                                     <div className="mt-4">
-                                        <Button className="w-full">Contact Support</Button>
+                                        <Link to={"/contact"}>      <Button className="w-full text-white">Contact Support</Button></Link>
                                     </div>
                                 </div>
                             </CardContent>
@@ -227,7 +228,7 @@ export default function AboutPage() {
                                             <Label className="sr-only">Email</Label>
                                             <Input placeholder="you@company.com" aria-label="Email" />
                                         </div>
-                                        <Button>Subscribe</Button>
+                                        <Button className="text-white">Subscribe</Button>
                                     </form>
                                 </CardContent>
                             </Card>

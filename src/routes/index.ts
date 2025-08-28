@@ -15,6 +15,9 @@ import { adminSidebarItems } from "./adminSIdebarItems";
 import { agentSidebarItems } from "./agentSidebarItems";
 import { commonAdminSidebarItems, commonAgentSidebarItems, commonUserSidebarItems } from "./commonSidebarItems";
 import { userSidebarItems } from "./userSidebarItems";
+import UnauthorizedPage from "@/pages/public/Unauthorized";
+import { withAuth } from "@/utils/withAuth";
+import { IRole } from "@/types";
 
 
 export const router = createBrowserRouter([
@@ -50,7 +53,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/user",
-        Component: DashboardLayout,
+        Component: withAuth(DashboardLayout, IRole.USER),
         children: [
             {
                 index: true,
@@ -62,7 +65,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/admin",
-        Component: DashboardLayout,
+        Component: withAuth(DashboardLayout, IRole.ADMIN),
         children: [
             {
                 index: true,
@@ -74,7 +77,7 @@ export const router = createBrowserRouter([
     },
     {
         path: "/agent",
-        Component: DashboardLayout,
+        Component: withAuth(DashboardLayout, IRole.AGENT),
         children: [
             {
                 index: true,
@@ -95,5 +98,9 @@ export const router = createBrowserRouter([
     {
         path: "/register",
         Component: RegisterPage,
+    },
+    {
+        Component: UnauthorizedPage,
+        path: "/unauthorized"
     },
 ]);

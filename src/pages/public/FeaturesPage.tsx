@@ -16,6 +16,7 @@ import {
     Star,
     ArrowRight
 } from "lucide-react";
+import { Link } from "react-router";
 
 // FeaturesPage.tsx
 // Feature listing and visuals for Paywave. Matches hero/about styles (dark-mode tuned).
@@ -165,7 +166,7 @@ export default function FeaturesPage() {
                             </div>
 
                             <div className="mt-4 flex gap-2">
-                                <Button size="sm">Get API Key</Button>
+                                <Link to={"/login"}> <Button size="sm" className="text-white">Get API Key</Button></Link>
                                 <Button size="sm" variant="ghost">Docs</Button>
                             </div>
                         </CardContent>
@@ -180,7 +181,7 @@ export default function FeaturesPage() {
                 <p className="mt-2 text-slate-600 dark:text-slate-300 max-w-xl mx-auto">Sign up and get access to the agent program, developer APIs, and launch guidance.</p>
 
                 <div className="mt-6 flex justify-center gap-3">
-                    <Button size="lg">Create an account</Button>
+                    <Link to={"/login"}>  <Button size="lg" className="text-white">Create an account</Button></Link>
                     <Button size="lg" variant="outline">Contact Sales</Button>
                 </div>
             </div>
