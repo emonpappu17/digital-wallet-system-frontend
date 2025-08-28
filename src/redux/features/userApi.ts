@@ -2,6 +2,15 @@ import { baseApi } from "../baseApi";
 
 export const userApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        updateProfile: builder.mutation({
+            query: (updateInfo) => ({
+                url: `/user/update`,
+                method: "PATCH",
+                data: updateInfo
+            }),
+            invalidatesTags: ["USER"]
+        }),
+
         getAllUsers: builder.query({
             query: (params) => ({
                 url: "/admin/users",
@@ -76,8 +85,9 @@ export const userApi = baseApi.injectEndpoints({
                 params
             }),
             providesTags: ['USER']
-        })
+        }),
+
     })
 })
 
-export const { useGetAllUsersStatsQuery, useGetAgentStatsQuery, useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation, useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation, useGetUserStatsQuery } = userApi;
+export const { useUpdateProfileMutation, useGetAllUsersStatsQuery, useGetAgentStatsQuery, useGetAllAgentsQuery, useApproveAgentMutation, useSuspendAgentMutation, useGetAllUsersQuery, useBlockUserMutation, useUnblockUserMutation, useGetUserStatsQuery } = userApi;

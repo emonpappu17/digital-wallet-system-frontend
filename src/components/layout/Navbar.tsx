@@ -25,8 +25,6 @@ import {
 import { LogOut, Settings, User } from "lucide-react"
 import { useAppDispatch } from "@/redux/hook"
 
-
-
 export default function Navbar() {
     const { data, isLoading } = useUserProfileQuery(undefined);
     const [logout] = useLogoutMutation();
@@ -35,6 +33,9 @@ export default function Navbar() {
 
     const currentRole = data?.data?.role
     const dashboardRoute = currentRole === "ADMIN" ? "admin" : currentRole === "USER" ? "user" : "agent"
+
+
+    const profileNavigate = currentRole?.toLowerCase();
 
     const navigationLinks = [
         { to: "/", label: "Home" },
@@ -113,12 +114,6 @@ export default function Navbar() {
 
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
-                        {/* <Link to="/" className="flex items-center">
-                            <div className="p-2 rounded-xl ">
-                                <Wallet className="h-6 w-6 text-primary" />
-                            </div>
-                            <span className="text-xl font-bold ">PayWave</span>
-                        </Link> */}
                         <Logo></Logo>
 
                         {/* Navigation menu */}
@@ -168,10 +163,12 @@ export default function Navbar() {
                                         <p className="text-muted-foreground text-sm">{data?.data?.email}</p>
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                        <Settings className="mr-1 h-4 w-4" />
-                                        Profile Settings
-                                    </DropdownMenuItem>
+                                    <Link to={`/${profileNavigate}/profile`}>
+                                        <DropdownMenuItem>
+                                            <Settings className="mr-1 h-4 w-4" />
+                                            Profile Settings
+                                        </DropdownMenuItem>
+                                    </Link>
                                     <DropdownMenuItem onClick={handleLogout}>
                                         <LogOut className="mr-1 h-4 w-4" />
                                         Logout

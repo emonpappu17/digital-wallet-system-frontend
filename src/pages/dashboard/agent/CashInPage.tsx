@@ -133,7 +133,7 @@ const CashInPage = () => {
 
     // Step-1
     const moneyAmountStep = () => {
-        return <Card className="w-full max-w-md mx-auto bg-card/70 ">
+        return <Card className="w-full max-w-md mx-auto bg-card/45 ">
             <CardHeader>
                 <CardTitle className="text-center">Cash In</CardTitle>
                 <CardDescription className="text-center">
@@ -202,7 +202,7 @@ const CashInPage = () => {
 
     // Step-2
     const agentSearchStep = () => {
-        return <Card className="w-full max-w-[500px] mx-auto">
+        return <Card className="w-full max-w-[500px] mx-auto bg-card/45">
             <CardHeader>
                 <div className="space-y-4">
                     <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
@@ -251,7 +251,7 @@ const CashInPage = () => {
 
     //step-3
     const moneyConfirmStep = () => {
-        return <Card className="w-full max-w-[500px] mx-auto">
+        return <Card className="w-full max-w-[500px] mx-auto bg-card/45">
             <CardHeader>
                 <CardTitle className="text-center">Confirm Cash In</CardTitle>
                 <CardDescription className="text-center">
@@ -322,7 +322,7 @@ const CashInPage = () => {
 
     //step-4
     const successStep = () => {
-        return <Card className="w-full max-w-md mx-auto">
+        return <Card className="w-full max-w-md mx-auto bg-card/45">
             <CardContent className="pt-6">
                 <div className="text-center space-y-4">
                     <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">

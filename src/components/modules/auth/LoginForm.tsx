@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input"
 import Password from "@/components/ui/Password"
 import { LoadingSpinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
-import { useLoginMutation } from "@/redux/features/authApi"
+import { authApi, useLoginMutation } from "@/redux/features/authApi"
+import { useAppDispatch } from "@/redux/hook"
 import { IRole } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { motion } from "framer-motion"
@@ -36,8 +37,7 @@ const loginSchema = z.object({
         ),
     password: z
         .string()
-        .nonempty("Password is required")
-        .min(8, "Password must be at least 8 characters")
+
 })
 
 export function LoginForm({
@@ -46,10 +46,13 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
     // const { data, isLoading: userLoading } = useUserProfileQuery(undefined);
 
+    const dispatch = useAppDispatch();
+
     const navigate = useNavigate();
 
     // API Call
     const [login, { isLoading }] = useLoginMutation();
+    // const []=authApi.endpoints.useUserProfileQuery()
 
     const form = useForm<z.infer<typeof loginSchema>>({
         resolver: zodResolver(loginSchema),
@@ -73,19 +76,15 @@ export function LoginForm({
             const res = await login(payload).unwrap();
             const role = res?.data?.user?.role;
 
-            if (role === IRole.AGENT) {
-                // console.log('outside', data?.data?.role);
-                // if (!userLoading) {
-                //     console.log('sdfsdf');
-                //     navigate("/agent");
-                //     toast.success("Welcome to Agent Dashboard");
-                // }
+            dispatch(authApi.util.resetApiState())
 
+            if (role === IRole.AGENT) {
                 navigate("/agent");
                 toast.success("Welcome to Agent Dashboard");
             } else if (role === IRole.USER) {
                 navigate("/user");
                 toast.success("Welcome to User Dashboard");
+
             } else if (role === IRole.ADMIN) {
                 navigate("/admin");
                 toast.success("Welcome to Admin Dashboard");
@@ -94,7 +93,7 @@ export function LoginForm({
                 toast.error("Unauthorized access");
             }
 
-            console.log("res login==>", res);
+            // console.log("res login==>", res);
         } catch (err: any) {
             console.error("Login failed", err);
             toast.error(err?.data?.message || "Login failed. Try again.");
