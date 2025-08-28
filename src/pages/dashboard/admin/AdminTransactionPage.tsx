@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import PieChartComponent, { Charts } from "@/components/modules/admin/Charts";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -25,7 +26,6 @@ import { ChevronDownIcon, CircleXIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { ITransaction } from "./AdminDashboardPage";
-import Component, { Charts } from "@/components/modules/admin/Charts";
 // import { Charts } from "@/components/modules/admin/Charts";
 // import Charts from "@/components/modules/admin/Charts";
 // // import { Charts } from "@/components/modules/admin/Charts";
@@ -78,6 +78,7 @@ const AdminTransactionPage = () => {
     }
     return (
         <div>
+            {/* <Charts chartData={chartData}></Charts> */}
             <Charts chartData={chartData}></Charts>
 
             {/* Filters */}
@@ -380,6 +381,11 @@ const AdminTransactionPage = () => {
              */}
             {/* <Component chartData={chartData}></Component> */}
             {/* <Charts></Charts> */}
+
+            {/* 
+            <PieChartComponent></PieChartComponent> */}
+
+            {/* <PieChartComponent></PieChartComponent> */}
         </div>
 
     );
