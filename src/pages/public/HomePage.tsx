@@ -1,8 +1,10 @@
+import Hero from "@/components/modules/public/Hero";
 
 const HomePage = () => {
     return (
         <div>
-            HomePage
+            {/* HomePage */}
+            <Hero></Hero>
         </div>
     );
 };

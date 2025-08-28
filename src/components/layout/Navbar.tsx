@@ -40,7 +40,7 @@ export default function Navbar() {
         { to: "/", label: "Home" },
         { to: "/about", label: "About" },
         { to: "/features", label: "Features" },
-        { to: "/pricing", label: "Pricing" },
+        // { to: "/pricing", label: "Pricing" },
         { to: "/contact", label: "Contact" },
         { to: "/faq", label: "FAQ" },
         { to: `/${dashboardRoute}`, label: "Dashboard" },

@@ -9,7 +9,6 @@ import ContractPage from "@/pages/public/ContractPage";
 import FAQPage from "@/pages/public/FAQPage";
 import FeaturesPage from "@/pages/public/FeaturesPage";
 import HomePage from "@/pages/public/HomePage";
-import PricingPage from "@/pages/public/PricingPage";
 import { generateRoutes } from "@/utils/genarateRoutes";
 import { createBrowserRouter } from "react-router";
 import { adminSidebarItems } from "./adminSIdebarItems";
@@ -35,10 +34,10 @@ export const router = createBrowserRouter([
                 path: "features",
                 Component: FeaturesPage
             },
-            {
-                path: "pricing",
-                Component: PricingPage
-            },
+            // {
+            //     path: "pricing",
+            //     Component: PricingPage
+            // },
             {
                 path: "contact",
                 Component: ContractPage

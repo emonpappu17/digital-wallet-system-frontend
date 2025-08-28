@@ -30,7 +30,6 @@ const UserTransactionPage = () => {
         paginationItemsToDisplay,
     });
 
-
     return (
         <div>
             {/* Filters */}
