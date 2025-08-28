@@ -12,7 +12,7 @@ import { useState } from "react";
 type ITnxType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY" | "ADD_MONEY"
 export type UserRole = "USER" | "AGENT";
 export type TransactionDirection = "SENT" | "RECEIVED";
-type MappedType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY" ;
+type MappedType = "CASH_IN" | "CASH_OUT" | "SEND_MONEY";
 
 export interface ITransaction {
   _id: string;
@@ -30,7 +30,9 @@ export interface ITransaction {
   toName: string;
   toEmail: string;
   toRole: UserRole;
-
+  agentCommission?: number,
+  counterpartName: string,
+  counterpartPhone: string,
   counterpartRole: UserRole;
   direction: TransactionDirection;
 }

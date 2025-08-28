@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import PieChartComponent, { Charts } from "@/components/modules/admin/Charts";
+import { Charts } from "@/components/modules/admin/Charts";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -26,10 +26,6 @@ import { ChevronDownIcon, CircleXIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { ITransaction } from "./AdminDashboardPage";
-// import { Charts } from "@/components/modules/admin/Charts";
-// import Charts from "@/components/modules/admin/Charts";
-// // import { Charts } from "@/components/modules/admin/Charts";
-// // import Charts from "@/components/modules/admin/Charts";
 
 type TType = "CASH_IN" | "CASH_OUT" | "ADD_MONEY" | "SEND_MONEY"
 
@@ -227,7 +223,7 @@ const AdminTransactionPage = () => {
                                                 .map((n) => n[0])
                                                 .slice(0, 2)
                                                 .join("")
-                                            : "B"; // fallback initial for "Bank"
+                                            : "B";
 
                                         return (
                                             <TableRow
@@ -267,7 +263,7 @@ const AdminTransactionPage = () => {
                                                     <div className="text-sm">৳ {(transaction.agentCommission as number).toFixed(2)}</div>
                                                 </TableCell>
                                                 <TableCell>
-                                                    {/* <div className="text-sm">{transaction.toName || "N/A"}</div> */}
+
                                                     <div className="flex flex-col">
                                                         <div className="font-medium">{transaction.fromName || "Bank"}</div>
                                                         <div className="text-xs text-muted-foreground">{transaction.fromPhone || "N/A"}</div>
@@ -375,17 +371,6 @@ const AdminTransactionPage = () => {
                     </div>
                 </div>
             )}
-
-
-            {/* <Charts></Charts>
-             */}
-            {/* <Component chartData={chartData}></Component> */}
-            {/* <Charts></Charts> */}
-
-            {/* 
-            <PieChartComponent></PieChartComponent> */}
-
-            {/* <PieChartComponent></PieChartComponent> */}
         </div>
 
     );

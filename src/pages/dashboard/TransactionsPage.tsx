@@ -1,5 +1,7 @@
 import { useUserProfileQuery } from "@/redux/features/authApi";
 import AdminTransactionPage from "./admin/AdminTransactionPage";
+import UserTransactionPage from "./user/UserTransactionPage";
+import AgentTransactionPage from "./agent/AgentTransactionPage";
 
 const TransactionsPage = () => {
     const { data } = useUserProfileQuery(undefined);
@@ -9,7 +11,8 @@ const TransactionsPage = () => {
 
             {/* {role === "AGENT" && } */}
             {role === "ADMIN" && <AdminTransactionPage />}
-            {/* {role === "USER" && <UserDashboardPage></UserDashboardPage>} */}
+            {role === "USER" && <UserTransactionPage />}
+            {role === "AGENT" && <AgentTransactionPage />}
         </div>
     );
 };
