@@ -265,11 +265,11 @@ const CashOutPage = () => {
         <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-3 space-y-2">
           <div className="flex justify-between text-sm text-muted-foreground">
             <div>Amount</div>
-            <div className="font-medium">{amount}</div>
+            <div className="font-medium">৳{amount}</div>
           </div>
           <div className="flex justify-between text-sm text-muted-foreground">
             <div>Charge</div>
-            <div className="font-medium">{fee}</div>
+            <div className="font-medium">৳{fee}</div>
           </div>
           <Separator />
           <div className="flex justify-between font-semibold text-lg">

@@ -86,7 +86,6 @@ export function LoginForm({
             } else if (role === IRole.USER) {
                 navigate("/user");
                 toast.success("Welcome to User Dashboard");
-
             } else if (role === IRole.ADMIN) {
                 navigate("/admin");
                 toast.success("Welcome to Admin Dashboard");

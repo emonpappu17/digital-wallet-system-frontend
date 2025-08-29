@@ -73,6 +73,11 @@ export const UserProfilePage = () => {
     const onProfileSubmit = async (data: ProfileFormData) => {
         try {
             if (user?.phoneNumber === data.phone && user?.name === data.name) return
+
+            if (user.email === "luka@gmail.com" && data.phone !== user?.phoneNumber) return toast.error("Demo agent phone number can not be changed login with real agent")
+
+            if (user.email === "neymar@gmail.com" && data.phone !== user?.phoneNumber) return toast.error("Demo user phone number can not be changed login with real user")
+
             const payload = { name: data.name, phoneNumber: user?.phoneNumber === data.phone ? "" : data.phone }
             await updateProfile(payload).unwrap();
             toast.success('Profile updated successfully!');
@@ -84,10 +89,20 @@ export const UserProfilePage = () => {
 
     const onPasswordSubmit = async (data: PasswordFormData) => {
         try {
+            if (user.email === "luka@gmail.com") return toast.error("Demo agent password can not be changed login with real agent")
+
+            if (user.email === "neymar@gmail.com") return toast.error("Demo user password can not be changed login with real user")
+
+            if (user.email === "luka@gmail.com") return toast.error("Demo agent password can not be changed login with real agent")
+
             if (user.role === IRole.ADMIN) return toast.error("Admin password can not be changed at this moment")
+
             const payload = { oldPassword: data.currentPassword, newPassword: data.newPassword }
+
             await updateProfile(payload).unwrap();
+
             toast.success('Password changed successfully!');
+
             passwordForm.reset();
         } catch (error: any) {
             console.log("pass update error:", error);
@@ -112,7 +127,7 @@ export const UserProfilePage = () => {
                     <User className="h-8 w-8 text-primary" />
                     <h1 className="text-3xl font-bold">Profile Settings</h1>
                 </div>
-                <p className="text-muted-foreground text-center">Manage your account information and preferences</p>
+                <p className="text-muted-foreground text-center">Manage your account information</p>
             </motion.div>
 
             <div className="grid lg:grid-cols-3 gap-8">

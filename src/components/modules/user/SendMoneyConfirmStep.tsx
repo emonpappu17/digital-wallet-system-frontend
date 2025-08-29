@@ -21,7 +21,7 @@ interface IProps {
 
 const SendMoneyConfirmStep = ({ amount, remainingBalance, receiverData, handleBackStep, handleSendMoney, sendMoneyLoading }: IProps) => {
     return (
-        <Card className="w-full max-w-[500px] mx-auto">
+        <Card className="w-full max-w-[500px] mx-auto bg-card/40">
             <CardHeader>
                 <CardTitle className="text-center">Confirm Transfer</CardTitle>
                 <CardDescription className="text-center">
@@ -32,19 +32,19 @@ const SendMoneyConfirmStep = ({ amount, remainingBalance, receiverData, handleBa
                 <div className="bg-gray-50 dark:bg-gray-800 rounded-md p-3 space-y-2">
                     <div className="flex justify-between text-sm text-muted-foreground">
                         <div>Amount</div>
-                        <div className="font-medium">{amount}</div>
+                        <div className="font-medium">৳{amount}</div>
                     </div>
                     <div className="flex justify-between text-sm text-muted-foreground">
                         <div>Charge</div>
-                        <div className="font-medium">0</div>
+                        <div className="font-medium">৳0</div>
                     </div>
                     <Separator />
                     <div className="flex justify-between font-semibold text-lg">
                         <div>Total</div>
-                        <div>{amount}</div>
+                        <div>৳{amount}</div>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                        Remaining balance: <span className="font-medium">{remainingBalance}</span>
+                        Remaining balance: <span className="font-medium">৳{remainingBalance}</span>
                     </div>
                 </div>
 

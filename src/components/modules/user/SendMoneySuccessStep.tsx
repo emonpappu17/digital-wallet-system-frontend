@@ -20,7 +20,7 @@ interface IProps {
 
 const SendMoneySuccessStep = ({ sendMoneyData, amount, walletBalance, receiverData, handleSendAgain }: IProps) => {
     return (
-        <Card className="w-full max-w-md mx-auto">
+        <Card className="w-full max-w-md mx-auto bg-card/40">
             <CardContent className="pt-6">
                 <div className="text-center space-y-4">
                     <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
