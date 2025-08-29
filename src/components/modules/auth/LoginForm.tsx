@@ -78,7 +78,7 @@ export function LoginForm({
 
             dispatch(authApi.util.resetApiState())
 
-            console.log('role==>', role);
+            // console.log('role==>', role);
 
             if (role === IRole.AGENT) {
                 navigate("/agent");
@@ -177,6 +177,16 @@ export function LoginForm({
                             <Link to="/register" replace className="underline underline-offset-4 hover:text-primary/90">
                                 Register
                             </Link>
+                        </div>
+
+                        {/* Demo Credentials */}
+                        <div className="border-t mt-3 pt-3 text-center">
+                            <p className="text-sm font-medium mb-2">Demo Credentials:</p>
+                            <div className="space-y-1 text-xs text-muted-foreground">
+                                <p><strong>User:</strong> neymar@gmail.com | 12345678</p>
+                                <p><strong>Agent:</strong> luka@gmail.com | 12345678</p>
+                                <p><strong>Admin:</strong> jhankarmahbub@gmail.com | 12345678</p>
+                            </div>
                         </div>
                     </CardContent>
                 </Card>

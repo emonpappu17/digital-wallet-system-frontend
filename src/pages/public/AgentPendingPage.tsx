@@ -13,7 +13,7 @@ const AgentPendingPage = () => {
                 transition={{ duration: 0.6, ease: "easeOut" }}
                 className="w-full max-w-md"
             >
-                <Card className="rounded-2xl shadow-xl border">
+                <Card className="rounded-2xl shadow-xl border bg-card/40">
                     <CardHeader className="text-center space-y-2">
                         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
                             <Hourglass className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />

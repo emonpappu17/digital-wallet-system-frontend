@@ -37,7 +37,7 @@ const UsersPage = () => {
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     const paginationItemsToDisplay = 4;
 
     //API Calls

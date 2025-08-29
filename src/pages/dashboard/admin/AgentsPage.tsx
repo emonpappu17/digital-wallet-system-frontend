@@ -48,14 +48,13 @@ export default function AgentsPage() {
     const [minCommission, setMinCommission] = useState<number | "">("");
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     const paginationItemsToDisplay = 4;
 
     // API Calls
     const { data, isLoading, isError, error, refetch } = useGetAllAgentsQuery(
         { limit, page: currentPage, search: search, status: statusFilter, minCommission },
         {
-            // Add some RTK Query options for better UX
             refetchOnMountOrArgChange: true,
             refetchOnReconnect: true,
         }

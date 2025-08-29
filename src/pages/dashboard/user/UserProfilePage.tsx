@@ -9,6 +9,7 @@ import Password from '@/components/ui/Password';
 import { Separator } from '@/components/ui/separator';
 import { useUserProfileQuery } from '@/redux/features/authApi';
 import { useUpdateProfileMutation } from '@/redux/features/userApi';
+import { IRole } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import {
@@ -49,9 +50,9 @@ export const UserProfilePage = () => {
 
     // API Calls
     const { data } = useUserProfileQuery(undefined);
-    const [updateProfile] = useUpdateProfileMutation();
+    const [updateProfile, { isLoading }] = useUpdateProfileMutation();
     const user = data?.data;
-    
+
     const profileForm = useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
         defaultValues: {
@@ -72,7 +73,6 @@ export const UserProfilePage = () => {
     const onProfileSubmit = async (data: ProfileFormData) => {
         try {
             if (user?.phoneNumber === data.phone && user?.name === data.name) return
-
             const payload = { name: data.name, phoneNumber: user?.phoneNumber === data.phone ? "" : data.phone }
             await updateProfile(payload).unwrap();
             toast.success('Profile updated successfully!');
@@ -84,6 +84,7 @@ export const UserProfilePage = () => {
 
     const onPasswordSubmit = async (data: PasswordFormData) => {
         try {
+            if (user.role === IRole.ADMIN) return toast.error("Admin password can not be changed at this moment")
             const payload = { oldPassword: data.currentPassword, newPassword: data.newPassword }
             await updateProfile(payload).unwrap();
             toast.success('Password changed successfully!');
@@ -217,8 +218,8 @@ export const UserProfilePage = () => {
                                         </p>
                                     </div>
 
-                                    <Button type="submit" className='text-white' disabled={profileForm.formState.isSubmitting}>
-                                        {profileForm.formState.isSubmitting ? 'Updating...' : 'Update Profile'}
+                                    <Button type="submit" className='text-white' disabled={profileForm.formState.isSubmitting || isLoading}>
+                                        {profileForm.formState.isSubmitting || isLoading ? 'Updating...' : 'Update Profile'}
                                     </Button>
                                 </form>
                             </Form>

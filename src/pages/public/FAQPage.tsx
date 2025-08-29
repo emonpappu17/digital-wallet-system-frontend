@@ -8,8 +8,8 @@ import { HelpCircle } from "lucide-react";
 export default function FAQPage() {
     const faqs = [
         {
-            q: "What is Orbit Wallet?",
-            a: "Orbit Wallet is a secure digital payment platform that allows users, agents, and businesses to send, receive, and manage money easily. It's designed for financial inclusion, supporting cash-in/out via agents and seamless mobile transactions."
+            q: "What is Pay Wave?",
+            a: "Pay Wave is a secure digital payment platform that allows users, agents, and businesses to send, receive, and manage money easily. It's designed for financial inclusion, supporting cash-in/out via agents and seamless mobile transactions."
         },
         {
             q: "How do I create an account?",
@@ -44,7 +44,7 @@ export default function FAQPage() {
             a: "Use the contact form on our site, email support@orbitwallet.example, or call +880 1X XXX XXXX during business hours."
         },
         {
-            q: "Can I use Orbit Wallet internationally?",
+            q: "Can I use Pay Wave internationally?",
             a: "Currently focused on local markets, but we're expanding. Cross-border features are in development."
         },
     ];
@@ -62,7 +62,7 @@ export default function FAQPage() {
                 </h1>
 
                 <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-                    Find quick answers to common questions about using Orbit Wallet, our features, security, and more. If you need further help, contact our support team.
+                    Find quick answers to common questions about using Pay Wave, our features, security, and more. If you need further help, contact our support team.
                 </p>
             </div>
 

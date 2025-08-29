@@ -18,6 +18,7 @@ import { userSidebarItems } from "./userSidebarItems";
 import UnauthorizedPage from "@/pages/public/Unauthorized";
 import { withAuth } from "@/utils/withAuth";
 import { IRole } from "@/types";
+import NotFoundPage from "@/pages/public/NotFoundPage";
 
 
 export const router = createBrowserRouter([
@@ -102,5 +103,9 @@ export const router = createBrowserRouter([
     {
         Component: UnauthorizedPage,
         path: "/unauthorized"
+    },
+    {
+        Component: NotFoundPage,
+        path: "/*"
     },
 ]);
