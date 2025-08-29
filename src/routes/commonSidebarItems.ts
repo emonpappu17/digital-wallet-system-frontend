@@ -1,6 +1,6 @@
-import DashboardPage from '@/pages/dashboard/DashboardPage';
-import ProfilePage from '@/pages/dashboard/ProfilePage';
-import TransactionsPage from '@/pages/dashboard/TransactionsPage';
+// import DashboardPage from '@/pages/dashboard/DashboardPage';
+// import ProfilePage from '@/pages/dashboard/ProfilePage';
+// import TransactionsPage from '@/pages/dashboard/TransactionsPage';
 // import CashOutPage from '@/pages/dashboard/agent/CashOutPage';
 import { ISidebarItem } from '@/types';
 
@@ -9,6 +9,11 @@ import {
     Home,
     User
 } from 'lucide-react';
+import { lazy } from 'react';
+
+const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
+const TransactionsPage = lazy(() => import("@/pages/dashboard/TransactionsPage"));
+const ProfilePage = lazy(() => import("@/pages/dashboard/ProfilePage"));
 
 export const commonUserSidebarItems: ISidebarItem[] = [
     {

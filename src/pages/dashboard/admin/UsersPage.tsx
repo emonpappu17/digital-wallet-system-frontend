@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,13 +20,12 @@ import { useBlockUserMutation, useGetAllUsersQuery, useUnblockUserMutation } fro
 import { useAppDispatch } from "@/redux/hook";
 import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
+import { handleFormateDate } from "@/utils/handleFormateDate";
 import { motion } from "framer-motion";
 import { CheckCircle, CircleXIcon, Eye, Search, XCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
-const formatDate = (iso?: string) =>
-    iso ? new Date(iso).toLocaleDateString() + " " + new Date(iso).toLocaleTimeString() : "-";
 
 const UsersPage = () => {
     const dispatch = useAppDispatch();
@@ -269,17 +267,25 @@ const UsersPage = () => {
                                         <TableRowSkeleton columns={6} key={index} />
                                     ))
                                 ) : (
-                                    apiUsers?.map((user: TUser) => (
-                                        <TableRow key={user._id} className="hover:bg-muted/5">
+                                    apiUsers?.map((user: TUser) => {
+                                        const initials = user?.name
+                                            ? user?.name
+                                                .split(" ")
+                                                .map((n) => n[0])
+                                                .slice(0, 2)
+                                                .join("")
+                                            : "B";
+                                        return <TableRow key={user._id} className="hover:bg-muted/5">
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
-                                                    <Avatar className="h-9 w-9">
-                                                        <AvatarImage src="https://github.com/shadcn.png" />
-                                                        <AvatarFallback>{user.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</AvatarFallback>
-                                                    </Avatar>
+                                                    {/* Initials Avatar */}
+                                                    <div className="h-9 w-9 flex items-center justify-center rounded-full bg-primary text-white font-semibold">
+                                                        {initials.toUpperCase()}
+                                                    </div>
                                                     <div className="flex flex-col">
-                                                        <div className="font-medium">{user.name}</div>
-                                                        <div className="text-xs text-muted-foreground">{user.phoneNumber}</div>
+                                                        <div className="font-medium">{user?.name || "Bank"}</div>
+                                                        {/* <div className="text-xs text-muted-foreground">{user?.name || "N/A"}</div> */}
+                                                        <div className="text-xs text-muted-foreground">{user.phoneNumber || "N/A"}</div>
                                                     </div>
                                                 </div>
                                             </TableCell>
@@ -291,7 +297,7 @@ const UsersPage = () => {
                                             </TableCell>
 
                                             <TableCell>
-                                                <div className="text-sm">{formatDate(user.createdAt)}</div>
+                                                <div className="text-sm">{handleFormateDate(user.createdAt)}</div>
                                             </TableCell>
 
                                             <TableCell>
@@ -343,7 +349,7 @@ const UsersPage = () => {
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    ))
+                                    })
                                 )}
                             </TableBody>
                         </Table>

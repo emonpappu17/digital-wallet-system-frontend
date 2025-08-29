@@ -74,8 +74,8 @@ const SendMoneyPage = () => {
         if (!amount) return 'Send amount not found';
         try {
             const payload = { receiverPhoneNumber: receiverData.phoneNumber, amount: Number(amount) }
-            const res = await sendMoney(payload).unwrap();
-            console.log(res);
+            await sendMoney(payload).unwrap();
+            // console.log(res);
             toast.success("Send money successfully!")
             handleNextStep();
             // setAmount()
@@ -98,8 +98,8 @@ const SendMoneyPage = () => {
 
             const payload = isEmail ? { email: searchTerm } : { phoneNumber: searchTerm }
 
-            const res = await getUser(payload).unwrap();
-            console.log(res);
+            await getUser(payload).unwrap();
+
             handleNextStep();
         } catch (err: any) {
             console.error("Get user failed", err);

@@ -13,7 +13,7 @@ const ProgressIndicator = ({ currentStep }: ProgressIndicatorProps) => {
                     >
                         <div
                             className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${currentStep >= step
-                                ? 'bg-green-600 text-white'
+                                ? 'bg-primary text-white'
                                 : 'bg-gray-300 text-gray-500'
                                 }`}
                         >
@@ -21,7 +21,7 @@ const ProgressIndicator = ({ currentStep }: ProgressIndicatorProps) => {
                         </div>
                         {step < 4 && (
                             <div
-                                className={`flex-1 h-1 ml-4 ${currentStep > step ? 'bg-green-600' : 'bg-gray-300'
+                                className={`flex-1 h-1 ml-4 ${currentStep > step ? 'bg-primary' : 'bg-gray-300'
                                     }`}
                             />
                         )}

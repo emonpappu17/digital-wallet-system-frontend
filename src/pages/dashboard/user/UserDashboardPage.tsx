@@ -48,7 +48,7 @@ const UserDashboardPage = () => {
   const wallet = data?.data?.wallet;
   const transactions = data?.data?.transaction || [];
 
-  console.log(transactions);
+  // console.log(transactions);
 
   // Helper functions for transactions
   const mapTransactionType = (type: ITnxType): MappedType => {

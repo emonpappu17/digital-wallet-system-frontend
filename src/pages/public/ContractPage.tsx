@@ -9,17 +9,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, Send } from "lucide-react";
 import { toast } from "sonner";
 
-export default function ContactPage() {
+import { motion } from "framer-motion";
 
+export default function ContactPage() {
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        toast.success("Your message has been sent successfully!")
-
+        toast.success("Your message has been sent successfully!");
     };
 
     return (
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+                className="max-w-4xl mx-auto text-center"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+            >
                 <Badge className="mb-4 bg-blue-100 text-blue-800 dark:bg-slate-800 dark:text-slate-200">
                     <Send className="w-4 h-4 mr-2" />
                     Contact Us
@@ -32,14 +37,23 @@ export default function ContactPage() {
                 <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
                     Have questions about Orbit Wallet? Reach out via the form below or use our contact details. Our team responds within 24 hours.
                 </p>
-            </div>
+            </motion.div>
 
-            <div className="mt-12 max-w-4xl mx-auto">
-                <Card className="rounded-2xl bg-white/95 dark:bg-slate-900 border-gray-200 dark:border-slate-700 shadow-sm">
+            <motion.div
+                className="mt-12 max-w-4xl mx-auto"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+            >
+                <Card className="rounded-2xl bg-card/40 shadow-sm">
                     <CardContent className="p-6">
                         <div className="grid gap-8 lg:grid-cols-2">
                             {/* Contact Details */}
-                            <div>
+                            <motion.div
+                                initial={{ opacity: 0, x: -30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.3 }}
+                            >
                                 <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Contact Information</h2>
                                 <p className="text-slate-600 dark:text-slate-300 mb-6">
                                     We're here to help with any inquiries about our services, partnerships, or support.
@@ -67,74 +81,49 @@ export default function ContactPage() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
 
                             {/* Inquiry Form */}
-                            <div>
+                            <motion.div
+                                initial={{ opacity: 0, x: 30 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ duration: 0.6, delay: 0.4 }}
+                            >
                                 <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Send Us a Message</h2>
                                 <form onSubmit={handleSubmit} className="space-y-4">
                                     <div>
                                         <Label htmlFor="name" className="text-sm font-medium text-slate-700 dark:text-slate-100">
                                             Name
                                         </Label>
-                                        <Input
-                                            id="name"
-                                            name="name"
-
-                                            placeholder="Your name"
-                                            required
-                                            className="mt-1"
-                                        />
+                                        <Input id="name" name="name" placeholder="Your name" required className="mt-1" />
                                     </div>
                                     <div>
                                         <Label htmlFor="email" className="text-sm font-medium text-slate-700 dark:text-slate-100">
                                             Email
                                         </Label>
-                                        <Input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-
-                                            placeholder="your@email.com"
-                                            required
-                                            className="mt-1"
-                                        />
+                                        <Input id="email" name="email" type="email" placeholder="your@email.com" required className="mt-1" />
                                     </div>
                                     <div>
                                         <Label htmlFor="subject" className="text-sm font-medium text-slate-700 dark:text-slate-100">
                                             Subject
                                         </Label>
-                                        <Input
-                                            id="subject"
-                                            name="subject"
-
-                                            placeholder="How can we help?"
-                                            required
-                                            className="mt-1"
-                                        />
+                                        <Input id="subject" name="subject" placeholder="How can we help?" required className="mt-1" />
                                     </div>
                                     <div>
                                         <Label htmlFor="message" className="text-sm font-medium text-slate-700 dark:text-slate-100">
                                             Message
                                         </Label>
-                                        <Textarea
-                                            id="message"
-                                            name="message"
-
-                                            placeholder="Your message here..."
-                                            required
-                                            className="mt-1 min-h-[120px]"
-                                        />
+                                        <Textarea id="message" name="message" placeholder="Your message here..." required className="mt-1 min-h-[120px]" />
                                     </div>
                                     <Button type="submit" className="w-full text-white">
                                         Submit Inquiry
                                     </Button>
                                 </form>
-                            </div>
+                            </motion.div>
                         </div>
                     </CardContent>
                 </Card>
-            </div>
+            </motion.div>
         </main>
     );
 }

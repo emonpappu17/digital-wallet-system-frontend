@@ -29,7 +29,7 @@ export default function Navbar() {
     const { data, isLoading } = useUserProfileQuery(undefined);
     const [logout] = useLogoutMutation();
     const dispatch = useAppDispatch();
-    console.log('user profile==>', data);
+    // console.log('user profile==>', data);
 
     const currentRole = data?.data?.role
     const dashboardRoute = currentRole === "ADMIN" ? "admin" : currentRole === "USER" ? "user" : "agent"
@@ -158,8 +158,20 @@ export default function Navbar() {
                                     </Avatar>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="mt-1">
-                                    <DropdownMenuLabel>
+                                    {/* <DropdownMenuLabel>
                                         {data?.data?.name}
+                                        <p className="text-muted-foreground text-sm">{data?.data?.email}</p>
+                                    </DropdownMenuLabel> */}
+
+                                    <DropdownMenuLabel className="flex flex-col">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-medium">{data?.data?.name}</span>
+                                            {data?.data?.role && (
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                                    {data.data.role}
+                                                </span>
+                                            )}
+                                        </div>
                                         <p className="text-muted-foreground text-sm">{data?.data?.email}</p>
                                     </DropdownMenuLabel>
                                     <DropdownMenuSeparator />

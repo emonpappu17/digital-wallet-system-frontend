@@ -14,12 +14,12 @@ interface IProps {
 
 const ReceiverSelectionStep = ({ amount, setSearchTerm, handleBackStep, handleSearchUser, gettingUserLoading }: IProps) => {
     return (
-        <Card className="w-full max-w-[500px] mx-auto">
+        <Card className="w-full max-w-[500px] mx-auto bg-card/40">
             <CardHeader>
                 <div className="space-y-4">
-                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div className="text-center p-4 bg-primary/20 rounded-lg">
                         <p className="text-sm text-gray-600 dark:text-gray-400">Send money amount</p>
-                        <p className="text-2xl font-bold text-green-600">৳
+                        <p className="text-2xl font-bold text-primary">৳
                             {amount?.toLocaleString()}
                         </p>
                     </div>

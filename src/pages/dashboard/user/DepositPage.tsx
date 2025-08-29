@@ -77,8 +77,8 @@ const DepositMoneyPage = () => {
         if (!amount) return 'Send amount not found';
         try {
             const payload = { amount: Number(amount) }
-            const res = await depositMoney(payload).unwrap();
-            console.log(res);
+         await depositMoney(payload).unwrap();
+       
             toast.success("Deposit money successfully!")
             handleNextStep();
             // setAmount()
@@ -99,7 +99,7 @@ const DepositMoneyPage = () => {
 
     // Step 1: Enter Amount
     const renderAmountStep = () => (
-        <Card className="w-full max-w-md mx-auto bg-card/70">
+        <Card className="w-full max-w-md mx-auto bg-card/40">
             <CardHeader>
                 <CardTitle className="text-center">Deposit Money</CardTitle>
                 <CardDescription className="text-center">
@@ -107,9 +107,9 @@ const DepositMoneyPage = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <div className="text-center p-4 bg-primary/20 rounded-lg">
                     <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
-                    <p className="text-2xl font-bold text-green-600">৳{walletBalance?.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-primary">৳{walletBalance?.toLocaleString()}</p>
                 </div>
 
                 <div className="space-y-2">
@@ -320,7 +320,7 @@ const DepositMoneyPage = () => {
                             >
                                 <div
                                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${currentStep >= step
-                                        ? 'bg-green-600 text-white'
+                                        ? 'bg-primary text-white'
                                         : 'bg-gray-300 text-gray-500'
                                         }`}
                                 >
@@ -328,7 +328,7 @@ const DepositMoneyPage = () => {
                                 </div>
                                 {step < 4 && (
                                     <div
-                                        className={`flex-1 h-1 ml-4 ${currentStep > step ? 'bg-green-600' : 'bg-gray-300'
+                                        className={`flex-1 h-1 ml-4 ${currentStep > step ? 'bg-primary' : 'bg-gray-300'
                                             }`}
                                     />
                                 )}

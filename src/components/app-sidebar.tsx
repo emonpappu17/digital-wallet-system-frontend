@@ -106,21 +106,37 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <div>
           <SidebarMenuButton
             size="lg"
-            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
+            className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar className="h-8 w-8 rounded-lg">
               <AvatarImage src={profile?.data?.photo} />
               <AvatarFallback>
                 <span className="text-xs select-none">
-                  {profile?.data?.name ? profile.data.name.slice(0, 2).toUpperCase() : <User></User>}
+                  {profile?.data?.name
+                    ? profile.data.name.slice(0, 2).toUpperCase()
+                    : <User />}
                 </span>
               </AvatarFallback>
             </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">{profile?.data?.name}</span>
-              <span className="truncate text-xs">{profile?.data.email}</span>
+
+            <div className="flex-1 text-left text-sm leading-tight">
+              {/* Name + Role inline */}
+              <div className="flex items-center gap-2">
+                <span className="truncate font-medium">
+                  {profile?.data?.name}
+                </span>
+                {profile?.data?.role && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                    {profile.data.role}
+                  </span>
+                )}
+              </div>
+
+              {/* Email below */}
+              <span className="truncate text-xs text-muted-foreground">
+                {profile?.data?.email}
+              </span>
             </div>
-            {/* <ChevronsUpDown className="ml-auto size-4" /> */}
           </SidebarMenuButton>
         </div>
       </SidebarFooter>

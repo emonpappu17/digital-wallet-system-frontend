@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import Password from '@/components/ui/Password';
 import { Separator } from '@/components/ui/separator';
+import { useUserProfileQuery } from '@/redux/features/authApi';
+import { useUpdateProfileMutation } from '@/redux/features/userApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import {
@@ -17,13 +20,9 @@ import {
     Settings,
     User
 } from 'lucide-react';
-import React from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import Password from '@/components/ui/Password';
-import { useUserProfileQuery } from '@/redux/features/authApi';
-import { useUpdateProfileMutation } from '@/redux/features/userApi';
 import { toast } from 'sonner';
+import { z } from 'zod';
 
 const profileSchema = z.object({
     name: z.string().min(2, 'Name must be at least 2 characters').optional(),
@@ -46,12 +45,13 @@ const passwordSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
-export const UserProfilePage: React.FC = () => {
+export const UserProfilePage = () => {
 
     // API Calls
     const { data } = useUserProfileQuery(undefined);
     const [updateProfile] = useUpdateProfileMutation();
     const user = data?.data;
+    
     const profileForm = useForm<ProfileFormData>({
         resolver: zodResolver(profileSchema),
         defaultValues: {

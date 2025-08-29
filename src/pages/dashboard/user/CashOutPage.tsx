@@ -36,7 +36,7 @@ const CashOutPage = () => {
   const [getAgent, { isLoading: gettingUserLoading, data: getAgentData }] = useGetAgentMutation();
   const [cashOut, { isLoading: cashOutLoading, data: getCashOutData }] = useCashOutMutation();
 
-  console.log(getAgentData);
+  // console.log(getAgentData);
   // Data
   const walletBalance = data?.data?.balance;
   const agentData = getAgentData?.data;
@@ -85,10 +85,10 @@ const CashOutPage = () => {
   const handleCashOut = async () => {
     if (!amount) return 'Send amount not found';
     try {
-      console.log(getAgentData.phoneNumber);
+      // console.log(getAgentData.phoneNumber);
       const payload = { agentPhoneNumber: agentData.phoneNumber, amount: Number(amount) }
-      const res = await cashOut(payload).unwrap();
-      console.log(res);
+      await cashOut(payload).unwrap();
+      // console.log(res);
       toast.success("Cash out successfully!")
       handleNextStep();
       // setAmount()
@@ -112,8 +112,8 @@ const CashOutPage = () => {
 
       const payload = { phoneNumber: searchTerm }
 
-      const res = await getAgent(payload).unwrap();
-      console.log(res);
+      await getAgent(payload).unwrap();
+      // console.log(res);
       handleNextStep();
     } catch (err: any) {
       console.error("Get agent failed", err);
@@ -127,7 +127,7 @@ const CashOutPage = () => {
     setSearchTerm('')
     setAmount('')
   }
-  console.log(amount);
+  // console.log(amount);
   const fee = (Number(amount) * FEE_CONFIG.cashOutFeePercent) / 100;
   const totalDeduction = Number(amount) + fee;
 
@@ -136,7 +136,7 @@ const CashOutPage = () => {
 
   // Step-1
   const moneyAmountStep = () => {
-    return <Card className="w-full max-w-md mx-auto bg-card/70">
+    return <Card className="w-full max-w-md mx-auto bg-card/40">
       <CardHeader>
         <CardTitle className="text-center">Cash Out</CardTitle>
         <CardDescription className="text-center">
@@ -145,16 +145,16 @@ const CashOutPage = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         {isWalletLoading ?
-          (<div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          (<div className="text-center p-4 bg-primary/20 rounded-lg">
             {/* Label skeleton */}
             <Skeleton className="h-4 w-28 mx-auto mb-2" />
 
             {/* Balance skeleton */}
             <Skeleton className="h-7 w-20 mx-auto rounded-md" />
           </div>) :
-          <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <div className="text-center p-4 bg-primary/20 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
-            <p className="text-2xl font-bold text-green-600">৳
+            <p className="text-2xl font-bold text-primary">৳
               {walletBalance?.toLocaleString()}
             </p>
           </div>}
@@ -205,12 +205,12 @@ const CashOutPage = () => {
 
   // Step-2
   const agentSearchStep = () => {
-    return <Card className="w-full max-w-[500px] mx-auto">
+    return <Card className="w-full max-w-[500px] mx-auto bg-card/40">
       <CardHeader>
         <div className="space-y-4">
-          <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+          <div className="text-center p-4 bg-primary/20 rounded-lg">
             <p className="text-sm text-gray-600 dark:text-gray-400">Cash out amount</p>
-            <p className="text-2xl font-bold text-green-600">৳
+            <p className="text-2xl font-bold text-primary">৳
               {amount?.toLocaleString()}
             </p>
           </div>
@@ -254,7 +254,7 @@ const CashOutPage = () => {
 
   //step-3
   const moneyConfirmStep = () => {
-    return <Card className="w-full max-w-[500px] mx-auto">
+    return <Card className="w-full max-w-[500px] mx-auto bg-card/40">
       <CardHeader>
         <CardTitle className="text-center">Confirm cash out</CardTitle>
         <CardDescription className="text-center">
@@ -321,7 +321,7 @@ const CashOutPage = () => {
 
   //step-4
   const successStep = () => {
-    return <Card className="w-full max-w-md mx-auto">
+    return <Card className="w-full max-w-md mx-auto bg-card/40">
       <CardContent className="pt-6">
         <div className="text-center space-y-4">
           <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">

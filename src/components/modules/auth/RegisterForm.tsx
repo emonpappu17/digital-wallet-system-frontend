@@ -103,7 +103,7 @@ const RegisterForm = ({
     });
 
     const onSubmit = async (values: RegisterFormValues) => {
-        console.log('values===>', values);
+        // console.log('values===>', values);
         try {
             if (values.role === "user") {
                 const userInfo = {

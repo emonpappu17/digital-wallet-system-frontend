@@ -36,7 +36,7 @@ const CashInPage = () => {
     const [getUser, { isLoading: gettingUserLoading, data: getUserData }] = useGetUserMutation();
     const [cashIn, { isLoading: cashInLoading, data: getCashInData }] = useCashInMutation();
 
-    console.log(getUserData);
+    // console.log(getUserData);
     // Data
     const walletBalance = data?.data?.balance;
     const userData = getUserData?.data;
@@ -77,7 +77,7 @@ const CashInPage = () => {
         if (currentStep > 1) {
             setCurrentStep(currentStep - 1);
             setSearchTerm("")
-            setAmount('')
+            setAmount('0')
             setErrors({});
         }
     };
@@ -86,8 +86,8 @@ const CashInPage = () => {
         if (!amount) return 'Amount not found';
         try {
             const payload = { userPhoneNumber: userData.phoneNumber, amount: Number(amount) }
-            const res = await cashIn(payload).unwrap();
-            console.log(res);
+            await cashIn(payload).unwrap();
+            // console.log(res);
             toast.success("Cash In successfully!")
             handleNextStep();
             // setAmount()
@@ -111,8 +111,8 @@ const CashInPage = () => {
 
             const payload = { phoneNumber: searchTerm }
 
-            const res = await getUser(payload).unwrap();
-            console.log(res);
+            await getUser(payload).unwrap();
+            // console.log(res);
             handleNextStep();
         } catch (err: any) {
             console.error("Get user failed", err);
@@ -133,7 +133,7 @@ const CashInPage = () => {
 
     // Step-1
     const moneyAmountStep = () => {
-        return <Card className="w-full max-w-md mx-auto bg-card/45 ">
+        return <Card className="w-full max-w-md mx-auto bg-card/40">
             <CardHeader>
                 <CardTitle className="text-center">Cash In</CardTitle>
                 <CardDescription className="text-center">
@@ -142,16 +142,16 @@ const CashInPage = () => {
             </CardHeader>
             <CardContent className="space-y-4">
                 {isWalletLoading ?
-                    (<div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    (<div className="text-center p-4 bg-primary/20 rounded-lg">
                         {/* Label skeleton */}
                         <Skeleton className="h-4 w-28 mx-auto mb-2" />
 
                         {/* Balance skeleton */}
                         <Skeleton className="h-7 w-20 mx-auto rounded-md" />
                     </div>) :
-                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div className="text-center p-4 bg-primary/20 rounded-lg">
                         <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
-                        <p className="text-2xl font-bold text-green-600">৳
+                        <p className="text-2xl font-bold text-primary">৳
                             {walletBalance?.toLocaleString()}
                         </p>
                     </div>}
@@ -202,12 +202,12 @@ const CashInPage = () => {
 
     // Step-2
     const agentSearchStep = () => {
-        return <Card className="w-full max-w-[500px] mx-auto bg-card/45">
+        return <Card className="w-full max-w-[500px] mx-auto bg-card/40">
             <CardHeader>
                 <div className="space-y-4">
-                    <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                    <div className="text-center p-4 bg-primary/20 rounded-lg">
                         <p className="text-sm text-gray-600 dark:text-gray-400">Cash in amount</p>
-                        <p className="text-2xl font-bold text-green-600">৳
+                        <p className="text-2xl font-bold text-primary">৳
                             {amount?.toLocaleString()}
                         </p>
                     </div>
@@ -251,7 +251,7 @@ const CashInPage = () => {
 
     //step-3
     const moneyConfirmStep = () => {
-        return <Card className="w-full max-w-[500px] mx-auto bg-card/45">
+        return <Card className="w-full max-w-[500px] mx-auto bg-card/40">
             <CardHeader>
                 <CardTitle className="text-center">Confirm Cash In</CardTitle>
                 <CardDescription className="text-center">
@@ -322,12 +322,11 @@ const CashInPage = () => {
 
     //step-4
     const successStep = () => {
-        return <Card className="w-full max-w-md mx-auto bg-card/45">
+        return <Card className="w-full max-w-md mx-auto bg-card/40">
             <CardContent className="pt-6">
                 <div className="text-center space-y-4">
                     <div className="mx-auto w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center">
                         <CheckCircle className="h-8 w-8 text-green-600" />
-
                     </div>
 
                     <div>
@@ -377,7 +376,7 @@ const CashInPage = () => {
                     {/* <Alert>
                         <AlertCircle className="h-4 w-4" />
                         <AlertDescription className="text-sm">
-                            Please collect your money from agent
+                            Cash in completed please check your wallet
                         </AlertDescription>
                     </Alert> */}
 
@@ -402,50 +401,23 @@ const CashInPage = () => {
 
                 {/* Step content */}
                 {currentStep === 1 &&
-                    // <SendMoneyAmountStep
-                    //   isWalletLoading={isWalletLoading}
-                    //   amount={amount}
-                    //   errors={errors}
-                    //   handleNextStep={handleNextStep}
-                    //   setAmount={setAmount}
-                    //   walletBalance={walletBalance}
-                    // />
+
                     moneyAmountStep()
                 }
 
                 {currentStep === 2 &&
                     agentSearchStep()
-                    // <ReceiverSelectionStep
-                    //   amount={amount}
-                    //   gettingUserLoading={gettingUserLoading}
-                    //   handleBackStep={handleBackStep}
-                    //   handleSearchUser={handleSearchUser}
-                    //   setSearchTerm={setSearchTerm}
-                    // />
+
                 }
 
                 {currentStep === 3 &&
-                    // <SendMoneyConfirmStep
-                    //   amount={amount}
-                    //   handleBackStep={handleBackStep}
-                    //   handleSendMoney={handleSendMoney}
-                    //   receiverData={receiverData}
-                    //   remainingBalance={remainingBalance}
-                    //   sendMoneyLoading={sendMoneyLoading}
-                    // />
+
                     moneyConfirmStep()
                 }
 
                 {currentStep === 4 &&
                     successStep()
-                    // <SendMoneySuccessStep
 
-                    //   amount={amount}
-                    //   handleSendAgain={handleSendAgain}
-                    //   receiverData={receiverData}
-                    //   sendMoneyData={sendMoneyData}
-                    //   walletBalance={walletBalance}
-                    // />
                 }
             </div>
         </div>

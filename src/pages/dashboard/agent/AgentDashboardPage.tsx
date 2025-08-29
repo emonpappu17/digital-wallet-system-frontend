@@ -50,7 +50,7 @@ const AgentDashboardPage = () => {
     const wallet = data?.data?.wallet;
     const transactions = data?.data?.transaction || [];
 
-    console.log(transactions);
+    // console.log(transactions);
 
     // Helper functions for transactions adapted for agent
     const mapTransactionType = (type: ITnxType): MappedType => {

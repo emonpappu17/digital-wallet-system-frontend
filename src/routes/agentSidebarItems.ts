@@ -1,11 +1,13 @@
-import CashInPage from '@/pages/dashboard/agent/CashInPage';
+// import CashInPage from '@/pages/dashboard/agent/CashInPage';
 // import CashOutPage from '@/pages/dashboard/agent/CashOutPage';
 import { ISidebarItem } from '@/types';
 
 import {
-    ArrowDownLeft,
-    ArrowUpRight,
+    ArrowDownLeft
 } from 'lucide-react';
+import { lazy } from 'react';
+
+const CashInPage = lazy(() => import("@/pages/dashboard/agent/CashInPage"));
 
 export const agentSidebarItems: ISidebarItem[] = [
     {

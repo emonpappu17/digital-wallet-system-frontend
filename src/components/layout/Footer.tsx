@@ -325,7 +325,7 @@ const Footer = () => {
                         </div>
 
                         <p className="mt-4 max-w-xs text-muted-foreground">
-                            Orbit Wallet is a secure, role-based digital wallet for Bangladesh—built for
+                            PayWave is a secure, role-based digital wallet for Bangladesh—built for
                             Users, Agents, and Admins. Enjoy instant transfers, cash-in/out via agents,
                             bill pay & mobile recharge with bank-grade security and 24/7 support.
                         </p>

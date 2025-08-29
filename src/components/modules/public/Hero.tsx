@@ -1,6 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useUserProfileQuery } from '@/redux/features/authApi';
 import {
     ArrowRight,
     CheckCircle,
@@ -12,8 +13,13 @@ import {
     Zap
 } from 'lucide-react';
 import { Link } from 'react-router';
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
+    const { data } = useUserProfileQuery(undefined);
+    const currentRole = data?.data?.role
+    const route = currentRole?.toLowerCase() || 'login';
+
     const features = [
         { icon: Shield, text: "Bank-level Security" },
         { icon: Zap, text: "Instant Transfers" },
@@ -29,8 +35,8 @@ const HeroSection = () => {
     ];
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800">
-            {/* Background Elements (muted in dark mode) */}
+        <div className="relative min-h-screen overflow-hidden ">
+            {/* Background Elements */}
             <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-3" />
             <div className="absolute top-20 left-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl opacity-30 dark:opacity-10 dark:bg-slate-800 bg-blue-200" />
             <div className="absolute bottom-20 right-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-xl opacity-30 dark:opacity-10 dark:bg-slate-800 bg-purple-200" />
@@ -39,7 +45,12 @@ const HeroSection = () => {
             <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
                 <div className="text-center max-w-5xl mx-auto">
                     {/* Badge */}
-                    <div className="mb-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        className="mb-8"
+                    >
                         <Badge
                             variant="secondary"
                             className="px-4 py-2 text-sm font-medium bg-blue-100 text-blue-800 border-blue-200 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700"
@@ -47,10 +58,15 @@ const HeroSection = () => {
                             <Star className="w-4 h-4 mr-2" />
                             #1 Digital Wallet Platform
                         </Badge>
-                    </div>
+                    </motion.div>
 
                     {/* Main Heading */}
-                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-slate-100 mb-6 leading-tight">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 40 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 dark:text-slate-100 mb-6 leading-tight"
+                    >
                         Your Digital
                         <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-sky-400 dark:to-indigo-400 ml-4">
                             Wallet
@@ -59,32 +75,54 @@ const HeroSection = () => {
                         <span className="text-3xl sm:text-4xl lg:text-5xl text-gray-700 dark:text-slate-300 font-semibold">
                             Reimagined
                         </span>
-                    </h1>
+                    </motion.h1>
 
                     {/* Subtitle */}
-                    <p className="text-xl sm:text-2xl text-gray-600 dark:text-slate-300 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.9, delay: 0.2 }}
+                        className="text-xl sm:text-2xl text-gray-600 dark:text-slate-300 mb-10 max-w-3xl mx-auto leading-relaxed"
+                    >
                         Experience seamless financial transactions with our secure, fast, and reliable digital wallet platform.
                         Perfect for users, agents, and businesses alike.
-                    </p>
+                    </motion.p>
 
                     {/* Feature Pills */}
-                    <div className="flex flex-wrap justify-center gap-4 mb-12">
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: {},
+                            visible: {
+                                transition: { staggerChildren: 0.15 }
+                            }
+                        }}
+                        className="flex flex-wrap justify-center gap-4 mb-12"
+                    >
                         {features.map((feature, index) => (
-                            <div
+                            <motion.div
                                 key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
                                 className="flex items-center gap-2 bg-white/90 dark:bg-slate-800/95 rounded-full px-4 py-2 shadow-sm border border-gray-200 dark:border-slate-700"
                             >
                                 <feature.icon className="w-4 h-4 text-blue-600 dark:text-sky-300" />
                                 <span className="text-sm font-medium text-gray-700 dark:text-slate-200">{feature.text}</span>
-                            </div>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
 
                     {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-                        <Link to={"/login"}>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+                        className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16"
+                    >
+                        <Link to={`/${route}`}>
                             <Button
-
                                 size="lg"
                                 className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                             >
@@ -101,29 +139,47 @@ const HeroSection = () => {
                                 Learn More
                             </Button>
                         </Link>
-                    </div>
+                    </motion.div>
 
                     {/* Stats Cards */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                    <motion.div
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            hidden: {},
+                            visible: { transition: { staggerChildren: 0.15 } }
+                        }}
+                        className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16"
+                    >
                         {stats.map((stat, index) => (
-                            <Card
+                            <motion.div
                                 key={index}
-                                className="bg-white/95 dark:bg-slate-900 border-gray-200 dark:border-slate-700 shadow-sm transition-all duration-300 transform hover:scale-102"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6, delay: index * 0.1 }}
                             >
-                                <CardContent className="p-6 text-center">
-                                    <div className="text-3xl font-bold text-sky-600 dark:text-sky-400 mb-2">
-                                        {stat.value}
-                                    </div>
-                                    <div className="text-gray-600 dark:text-slate-300 font-medium">
-                                        {stat.label}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                                <Card className="bg-card/40 shadow-sm transition-all duration-300 transform hover:scale-102">
+                                    <CardContent className="p-6 text-center">
+                                        <div className="text-3xl font-bold text-primary mb-2">
+                                            {stat.value}
+                                        </div>
+                                        <div className="text-gray-600 dark:text-slate-300 font-medium">
+                                            {stat.label}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </motion.div>
                         ))}
-                    </div>
+                    </motion.div>
 
                     {/* Trust Indicators */}
-                    <div className="bg-white/95 dark:bg-slate-900 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-slate-700">
+                    <motion.div
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.7 }}
+                        viewport={{ once: true }}
+                        className="bg-card/40 rounded-2xl p-8 shadow-lg "
+                    >
                         <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-6">
                             Trusted by Everyone
                         </h3>
@@ -150,15 +206,21 @@ const HeroSection = () => {
                                 <p className="text-gray-600 dark:text-slate-300">Complete system oversight and control</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Security Badge */}
-                    <div className="mt-12 flex justify-center">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        transition={{ duration: 0.7, delay: 0.2 }}
+                        viewport={{ once: true }}
+                        className="mt-12 flex justify-center"
+                    >
                         <div className="flex items-center gap-2 bg-green-800/10 dark:bg-green-900/20 text-green-500 dark:text-green-300 px-4 py-2 rounded-full border border-green-200 dark:border-green-700">
                             <CheckCircle className="w-5 h-5" />
                             <span className="text-sm font-medium">SSL Encrypted & Fully Secured</span>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </div>
 
@@ -173,4 +235,5 @@ const HeroSection = () => {
 };
 
 export default HeroSection;
+
 

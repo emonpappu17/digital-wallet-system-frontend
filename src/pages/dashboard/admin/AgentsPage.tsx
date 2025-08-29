@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +26,7 @@ import { useApproveAgentMutation, useGetAllAgentsQuery, useSuspendAgentMutation 
 import { useAppDispatch } from "@/redux/hook";
 import { TUser } from "@/types";
 import { Status } from "@/types/user.types";
+import { handleFormateDate } from "@/utils/handleFormateDate";
 import { motion } from "framer-motion";
 import {
     CheckCircle,
@@ -39,10 +39,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 type AgentStatus = "PENDING" | "ACTIVE" | "SUSPEND";
-
-/** simple util for date format */
-const formatDate = (iso?: string) =>
-    iso ? new Date(iso).toLocaleDateString() + " " + new Date(iso).toLocaleTimeString() : "-";
 
 export default function AgentsPage() {
     const dispatch = useAppDispatch();
@@ -297,17 +293,25 @@ export default function AgentsPage() {
                                         <TableRowSkeleton key={index} />
                                     ))
                                 ) : (
-                                    apiAgents?.map((agent: TUser) => (
-                                        <TableRow key={agent._id} className="hover:bg-muted/5">
+                                    apiAgents?.map((agent: TUser) => {
+                                        const initials = agent?.name
+                                            ? agent?.name
+                                                .split(" ")
+                                                .map((n) => n[0])
+                                                .slice(0, 2)
+                                                .join("")
+                                            : "B";
+                                        return <TableRow key={agent._id} className="hover:bg-muted/5">
                                             <TableCell>
                                                 <div className="flex items-center gap-3">
-                                                    <Avatar className="h-9 w-9">
-                                                        <AvatarImage src="https://github.com/shadcn.png" />
-                                                        <AvatarFallback>{agent.name.split(" ").map(n => n[0]).slice(0, 2).join("")}</AvatarFallback>
-                                                    </Avatar>
+                                                    {/* Initials Avatar */}
+                                                    <div className="h-9 w-9 flex items-center justify-center rounded-full bg-primary text-white font-semibold">
+                                                        {initials.toUpperCase()}
+                                                    </div>
                                                     <div className="flex flex-col">
-                                                        <div className="font-medium">{agent.name}</div>
-                                                        <div className="text-xs text-muted-foreground">{agent.phoneNumber}</div>
+                                                        <div className="font-medium">{agent?.name || "Bank"}</div>
+                                                        {/* <div className="text-xs text-muted-foreground">{agent?.name || "N/A"}</div> */}
+                                                        <div className="text-xs text-muted-foreground">{agent.phoneNumber || "N/A"}</div>
                                                     </div>
                                                 </div>
                                             </TableCell>
@@ -323,7 +327,7 @@ export default function AgentsPage() {
                                             </TableCell>
 
                                             <TableCell>
-                                                <div className="text-sm">{formatDate(agent.createdAt)}</div>
+                                                <div className="text-sm">{handleFormateDate(agent.createdAt)}</div>
                                             </TableCell>
 
                                             <TableCell>
@@ -380,7 +384,7 @@ export default function AgentsPage() {
                                                 </div>
                                             </TableCell>
                                         </TableRow>
-                                    ))
+                                    })
                                 )}
                             </TableBody>
                         </Table>

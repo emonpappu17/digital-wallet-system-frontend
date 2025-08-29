@@ -54,10 +54,22 @@ const DashboardLayout = () => {
                                     </Avatar>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="mt-1">
-                                    <DropdownMenuLabel>
+                                    {/* <DropdownMenuLabel>
                                         {data?.data?.name}
                                         <p className="text-muted-foreground text-sm">{data?.data?.email}</p>
+                                    </DropdownMenuLabel> */}
+                                    <DropdownMenuLabel className="flex flex-col">
+                                        <div className="flex items-center gap-2">
+                                            <span className="font-medium">{data?.data?.name}</span>
+                                            {data?.data?.role && (
+                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                                    {data.data.role}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <p className="text-muted-foreground text-sm">{data?.data?.email}</p>
                                     </DropdownMenuLabel>
+
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem>
                                         <Settings className="mr-1 h-4 w-4" />

@@ -78,6 +78,8 @@ export function LoginForm({
 
             dispatch(authApi.util.resetApiState())
 
+            console.log('role==>', role);
+
             if (role === IRole.AGENT) {
                 navigate("/agent");
                 toast.success("Welcome to Agent Dashboard");

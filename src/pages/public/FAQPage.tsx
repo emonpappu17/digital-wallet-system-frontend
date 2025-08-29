@@ -67,7 +67,7 @@ export default function FAQPage() {
             </div>
 
             <div className="mt-12 max-w-4xl mx-auto">
-                <Card className="rounded-2xl bg-white/95 dark:bg-slate-900 border-gray-200 dark:border-slate-700 shadow-sm">
+                <Card className="rounded-2xl bg-card/40 shadow-sm">
                     <CardContent className="p-6">
                         <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-6">Common Questions</h2>
                         <div className="space-y-6">
