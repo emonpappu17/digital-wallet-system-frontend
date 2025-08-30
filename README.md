@@ -35,7 +35,7 @@ A production-minded, role-based frontend for a Digital Wallet System built with 
 ## Live & Repo Links
 
 - **Frontend (Live URL):** [https://digital-wallet-system-frontend-xi.vercel.app](https://digital-wallet-system-frontend-xi.vercel.app)
-- **Backend (Live URL):** [**https://digital-wallet-system-backend-gamma.vercel.app](https://digital-wallet-system-backend-gamma.vercel.app/api/v1)
+- **Backend (Live URL):** [https://digital-wallet-system-backend-gamma.vercel.app](https://digital-wallet-system-backend-gamma.vercel.app/api/v1)
 - **Frontend Repo:** [https://github.com/emonpappu17/digital-wallet-system-frontend](https://github.com/emonpappu17/digital-wallet-system-frontend)
 - **Backend Repo:** [https://github.com/emonpappu17/digital-wallet-system-backend](https://github.com/emonpappu17/digital-wallet-system-backend)
 
