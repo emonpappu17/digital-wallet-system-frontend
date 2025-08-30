@@ -83,7 +83,7 @@ const CashInPage = () => {
     };
 
     const handleInOut = async () => {
-        if (!amount) return 'Amount not found';
+        if (!amount) return toast.error('Amount not found');
         try {
             const payload = { userPhoneNumber: userData.phoneNumber, amount: Number(amount) }
             await cashIn(payload).unwrap();
@@ -401,23 +401,19 @@ const CashInPage = () => {
 
                 {/* Step content */}
                 {currentStep === 1 &&
-
                     moneyAmountStep()
                 }
 
                 {currentStep === 2 &&
                     agentSearchStep()
-
                 }
 
                 {currentStep === 3 &&
-
                     moneyConfirmStep()
                 }
 
                 {currentStep === 4 &&
                     successStep()
-
                 }
             </div>
         </div>

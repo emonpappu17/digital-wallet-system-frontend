@@ -46,6 +46,9 @@ const passwordSchema = z.object({
 type ProfileFormData = z.infer<typeof profileSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
+
+const STORAGE_KEY = "isTourCompleted";
+
 export const UserProfilePage = () => {
 
     // API Calls
@@ -110,8 +113,10 @@ export const UserProfilePage = () => {
         }
     };
 
-    const handleRestartTour = () => {
-        toast.success('Tour reset! The guide will start on your next dashboard visit.');
+
+    const restartTour = () => {
+        localStorage.removeItem(STORAGE_KEY);
+        window.location.reload();
     };
 
     return (
@@ -315,19 +320,17 @@ export const UserProfilePage = () => {
                             <div>
                                 <h4 className="font-medium mb-2">Guided Tour</h4>
                                 <p className="text-sm text-muted-foreground mb-4">
-                                    {/* {tourCompleted
-                                        ? 'You have completed the guided tour. Restart it to see the walkthrough again.'
-                                        : 'The guided tour will help you navigate the dashboard features.'
-                                    } */}
+                                    You have completed the guided tour. Restart it to see the walkthrough again.
                                 </p>
                                 <Button
                                     variant="outline"
-                                    onClick={handleRestartTour}
+                                    onClick={restartTour}
                                     className="flex items-center gap-2"
                                 >
                                     <HelpCircle className="h-4 w-4" />
-                                    {/* {tourCompleted ? 'Restart Tour' : 'Reset Tour Progress'} */}
+                                    Restart Tour
                                 </Button>
+
                             </div>
 
                             <Separator />

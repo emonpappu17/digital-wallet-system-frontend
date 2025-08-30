@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useDepositMoneyMutation } from '@/redux/features/transactionApi';
 import { useGetMyWalletQuery } from '@/redux/features/walletApi';
 import { handleFormateDate } from '@/utils/handleFormateDate';
@@ -25,7 +26,7 @@ const DepositMoneyPage = () => {
     const [errors, setErrors] = useState<IError>({});
 
     // API Calls
-    const { data, refetch, } = useGetMyWalletQuery(undefined);
+    const { data, refetch, isLoading: isWalletLoading } = useGetMyWalletQuery(undefined);
     const [depositMoney, { isLoading: depositLoading, data: getDepositData }] = useDepositMoneyMutation();
 
     // Data
@@ -77,8 +78,8 @@ const DepositMoneyPage = () => {
         if (!amount) return 'Send amount not found';
         try {
             const payload = { amount: Number(amount) }
-         await depositMoney(payload).unwrap();
-       
+            await depositMoney(payload).unwrap();
+
             toast.success("Deposit money successfully!")
             handleNextStep();
             // setAmount()
@@ -88,8 +89,6 @@ const DepositMoneyPage = () => {
             toast.error(err?.data?.message || "Login failed. Try again.");
         }
     };
-
-
 
     const handleSendAgain = () => {
         refetch()
@@ -107,10 +106,21 @@ const DepositMoneyPage = () => {
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="text-center p-4 bg-primary/20 rounded-lg">
+                {/* <div className="text-center p-4 bg-primary/20 rounded-lg">
                     <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
                     <p className="text-2xl font-bold text-primary">৳{walletBalance?.toLocaleString()}</p>
-                </div>
+                </div> */}
+                {isWalletLoading ?
+                    (<div className="text-center p-4 bg-primary/20 rounded-lg">
+                        <Skeleton className="h-4 w-28 mx-auto mb-2" />
+                        <Skeleton className="h-7 w-20 mx-auto rounded-md" />
+                    </div>) :
+                    <div className="text-center p-4 bg-primary/20 rounded-lg">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Current Balance</p>
+                        <p className="text-2xl font-bold text-primary">৳
+                            {walletBalance?.toLocaleString()}
+                        </p>
+                    </div>}
 
                 <div className="space-y-2">
                     <Label htmlFor="amount">Deposit Amount (৳)</Label>

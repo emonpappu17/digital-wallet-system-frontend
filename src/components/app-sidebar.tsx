@@ -45,26 +45,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            {/* <SidebarMenu className="space-y-2">
-              {sortedItems.map((item) => (
-                <SidebarMenuItem key={item.title} >
-                  <SidebarMenuButton asChild isActive={location === item.url} className={`px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 
-                     ${location === item.url ?
-                      "!text-primary bg-primary/10 dark:bg-primary/20" :
-                      "text-muted-foreground hover:text-primary hover:bg-muted/30"}`}>
-                    <Link
-                      to={item.url}
-                      className="py-5 "
-                    >
-                      <item.icon className="size-4"></item.icon>
-                      {item.title}
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-
-            </SidebarMenu> */}
-
             <SidebarMenu className="space-y-2">
               {!items || items.length === 0 ? (
                 // Skeleton state
@@ -72,7 +52,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <SidebarMenuItem key={i}>
                     <SidebarMenuButton disabled className="px-3 py-2 text-sm font-medium rounded-lg flex gap-2">
                       <Skeleton className="size-4 rounded-md" />
-                      <Skeleton className="h-4 w-24 rounded-md" />
+                      <Skeleton className="h-4 w-28 rounded-md" />
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))
@@ -89,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                           : "text-muted-foreground hover:text-primary hover:bg-muted/30"
                         }`}
                     >
-                      <Link to={item.url} className="py-5">
+                      <Link to={item.url} className={`py-5 ${item.title.toLocaleLowerCase()}-tour`}>
                         <item.icon className="size-4" />
                         {item.title}
                       </Link>

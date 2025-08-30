@@ -102,7 +102,7 @@ export function Charts({ chartData }: { chartData: any }) {
                                 fill="#8884d8"
                                 dataKey="totalAmount"
                             >
-                                {pieChart?.map((entry: any, index: number) => (
+                                {pieChart?.map((_entry: any, index: number) => (
                                     <Cell
                                         key={`cell-${index}`}
                                         fill={pieColors[index % pieColors.length]}
