@@ -34,7 +34,6 @@ export default function Navbar() {
     const currentRole = data?.data?.role
     const dashboardRoute = currentRole === "ADMIN" ? "admin" : currentRole === "USER" ? "user" : "agent"
 
-
     const profileNavigate = currentRole?.toLowerCase();
 
     const navigationLinks = [
