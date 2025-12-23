@@ -101,6 +101,12 @@ export function LoginForm({
         }
     };
 
+    const fillDemoCredentials = (identifier: string, password: string) => {
+        form.setValue("identifier", identifier, { shouldValidate: true });
+        form.setValue("password", password, { shouldValidate: true });
+    };
+
+
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <motion.div
@@ -179,14 +185,47 @@ export function LoginForm({
                         </div>
 
                         {/* Demo Credentials */}
-                        <div className="border-t mt-3 pt-3 text-center">
-                            <p className="text-sm font-medium mb-2">Demo Credentials:</p>
-                            <div className="space-y-1 text-xs text-muted-foreground">
-                                <p><strong>User:</strong> neymar@gmail.com | 12345678</p>
-                                <p><strong>Agent:</strong> luka@gmail.com | 12345678</p>
-                                <p><strong>Admin:</strong> jhankarmahbub@gmail.com | 12345678</p>
+                        <div className="border-t mt-4 pt-4">
+                            <p className="text-sm font-medium text-center mb-3">
+                                Demo Login (Auto Fill)
+                            </p>
+
+                            <div className="grid grid-cols-1 gap-2">
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() =>
+                                        fillDemoCredentials("neymar@gmail.com", "12345678")
+                                    }
+                                >
+                                    Login as Demo User
+                                </Button>
+
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() =>
+                                        fillDemoCredentials("luka@gmail.com", "12345678")
+                                    }
+                                >
+                                    Login as Demo Agent
+                                </Button>
+
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() =>
+                                        fillDemoCredentials("jhankarmahbub@gmail.com", "12345678")
+                                    }
+                                >
+                                    Login as Demo Admin
+                                </Button>
                             </div>
                         </div>
+
                     </CardContent>
                 </Card>
             </motion.div>
