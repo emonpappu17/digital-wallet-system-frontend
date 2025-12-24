@@ -8,7 +8,7 @@ import {
     Wallet
 } from "lucide-react"
 import { Link } from "react-router"
-
+// import { Link } from "react-router-dom"
 
 const features = [
     {
@@ -45,7 +45,7 @@ const features = [
 
 export default function CoreFeatures() {
     return (
-        <section className="max-w-5xl mx-auto px-4 py-20">
+        <div className="relative z-10 max-w-5xl mx-auto px-4 py-20">
             {/* Section Header */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -104,6 +104,6 @@ export default function CoreFeatures() {
                     )
                 })}
             </div>
-        </section>
+        </div>
     )
 }
