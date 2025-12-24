@@ -1,129 +1,181 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { motion } from "framer-motion"
+import { Mail, Phone, MapPin } from "lucide-react"
+import { toast } from "sonner"
+import * as z from "zod"
 
-import { Mail, Phone, Send } from "lucide-react";
-import { toast } from "sonner";
+const contactSchema = z.object({
+    name: z.string().min(2, "Name is required"),
+    email: z.string().email("Enter a valid email"),
+    subject: z.string().min(3, "Subject is required"),
+    message: z.string().min(10, "Message must be at least 10 characters"),
+})
 
-import { motion } from "framer-motion";
+export default function Contact() {
+    const form = useForm<z.infer<typeof contactSchema>>({
+        resolver: zodResolver(contactSchema),
+        defaultValues: {
+            name: "",
+            email: "",
+            subject: "",
+            message: "",
+        },
+    })
 
-export default function ContactPage() {
-    const handleSubmit = (e: any) => {
-        e.preventDefault();
-        toast.success("Your message has been sent successfully!");
-    };
+    const onSubmit = async () => {
+        // Simulated submission
+        toast.success("Your message has been sent successfully!")
+        form.reset()
+    }
 
     return (
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <section className="container mx-auto px-4 py-16 space-y-16">
+            {/* Header */}
             <motion.div
-                className="max-w-4xl mx-auto text-center"
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-3xl mx-auto text-center"
             >
-                <Badge className="mb-4 bg-blue-100 text-blue-800 dark:bg-slate-800 dark:text-slate-200">
-                    <Send className="w-4 h-4 mr-2" />
-                    Contact Us
-                </Badge>
-
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight">
-                    Get in Touch
-                </h1>
-
-                <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-                    Have questions about Orbit Wallet? Reach out via the form below or use our contact details. Our team responds within 24 hours.
+                <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
+                <p className="text-muted-foreground text-lg">
+                    Have questions, feedback, or need support?
+                    Our team is here to help you with any PayWave-related inquiry.
                 </p>
             </motion.div>
 
-            <motion.div
-                className="mt-12 max-w-4xl mx-auto"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2 }}
-            >
-                <Card className="rounded-2xl bg-card/40 shadow-sm">
-                    <CardContent className="p-6">
-                        <div className="grid gap-8 lg:grid-cols-2">
-                            {/* Contact Details */}
-                            <motion.div
-                                initial={{ opacity: 0, x: -30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.6, delay: 0.3 }}
-                            >
-                                <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Contact Information</h2>
-                                <p className="text-slate-600 dark:text-slate-300 mb-6">
-                                    We're here to help with any inquiries about our services, partnerships, or support.
-                                </p>
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <Mail className="w-5 h-5 text-slate-500 dark:text-slate-300 mt-1" />
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-700 dark:text-slate-100">Email</p>
-                                            <p className="text-sm text-slate-600 dark:text-slate-300">support@orbitwallet.example</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <Phone className="w-5 h-5 text-slate-500 dark:text-slate-300 mt-1" />
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-700 dark:text-slate-100">Phone</p>
-                                            <p className="text-sm text-slate-600 dark:text-slate-300">+880 1X XXX XXXX (Mon-Fri, 9am-6pm)</p>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <Send className="w-5 h-5 text-slate-500 dark:text-slate-300 mt-1" />
-                                        <div>
-                                            <p className="text-sm font-medium text-slate-700 dark:text-slate-100">Address</p>
-                                            <p className="text-sm text-slate-600 dark:text-slate-300">Dhaka, Bangladesh</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
+            {/* Content */}
+            <div className="grid lg:grid-cols-2 gap-10">
+                {/* Contact Info */}
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="space-y-6"
+                >
+                    <Card className="bg-card/50">
+                        <CardHeader>
+                            <CardTitle>Get in Touch</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-4 text-muted-foreground">
+                            <div className="flex items-center gap-3">
+                                <Mail className="w-5 h-5 text-primary" />
+                                <span>emonbafsd@gmail.com</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <Phone className="w-5 h-5 text-primary" />
+                                <span>+880 1648383606</span>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <MapPin className="w-5 h-5 text-primary" />
+                                <span>Dhaka, Bangladesh</span>
+                            </div>
+                        </CardContent>
+                    </Card>
 
-                            {/* Inquiry Form */}
-                            <motion.div
-                                initial={{ opacity: 0, x: 30 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ duration: 0.6, delay: 0.4 }}
-                            >
-                                <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-4">Send Us a Message</h2>
-                                <form onSubmit={handleSubmit} className="space-y-4">
-                                    <div>
-                                        <Label htmlFor="name" className="text-sm font-medium text-slate-700 dark:text-slate-100">
-                                            Name
-                                        </Label>
-                                        <Input id="name" name="name" placeholder="Your name" required className="mt-1" />
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="email" className="text-sm font-medium text-slate-700 dark:text-slate-100">
-                                            Email
-                                        </Label>
-                                        <Input id="email" name="email" type="email" placeholder="your@email.com" required className="mt-1" />
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="subject" className="text-sm font-medium text-slate-700 dark:text-slate-100">
-                                            Subject
-                                        </Label>
-                                        <Input id="subject" name="subject" placeholder="How can we help?" required className="mt-1" />
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="message" className="text-sm font-medium text-slate-700 dark:text-slate-100">
-                                            Message
-                                        </Label>
-                                        <Textarea id="message" name="message" placeholder="Your message here..." required className="mt-1 min-h-[120px]" />
-                                    </div>
+                    <Card className="bg-card/50">
+                        <CardHeader>
+                            <CardTitle>Support Hours</CardTitle>
+                        </CardHeader>
+                        <CardContent className="text-muted-foreground">
+                            <p>Sunday – Thursday: 9:00 AM – 8:00 PM</p>
+                            <p>Friday – Saturday: Limited Support</p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+
+                {/* Contact Form */}
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                >
+                    <Card className="bg-card/50">
+                        <CardHeader>
+                            <CardTitle>Send Us a Message</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Form {...form}>
+                                <form
+                                    onSubmit={form.handleSubmit(onSubmit)}
+                                    className="space-y-5"
+                                >
+                                    <FormField
+                                        control={form.control}
+                                        name="name"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Full Name</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="Your full name" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Email Address</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="you@example.com" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="subject"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Subject</FormLabel>
+                                                <FormControl>
+                                                    <Input placeholder="How can we help you?" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
+                                    <FormField
+                                        control={form.control}
+                                        name="message"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Message</FormLabel>
+                                                <FormControl>
+                                                    <Textarea
+                                                        rows={5}
+                                                        placeholder="Write your message here..."
+                                                        {...field}
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+
                                     <Button type="submit" className="w-full text-white">
-                                        Submit Inquiry
+                                        Send Message
                                     </Button>
                                 </form>
-                            </motion.div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </motion.div>
-        </main>
-    );
+                            </Form>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            </div>
+        </section>
+    )
 }
+

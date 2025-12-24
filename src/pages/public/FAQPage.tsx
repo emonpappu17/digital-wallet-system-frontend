@@ -1,89 +1,84 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Card } from "@/components/ui/card"
+import { motion } from "framer-motion"
 
+const faqs = [
+    {
+        question: "What is PayWave?",
+        answer:
+            "PayWave is a secure digital wallet platform that allows users to send, receive, deposit, and withdraw money digitally using email or phone number."
+    },
+    {
+        question: "How do I create an account?",
+        answer:
+            "You can create an account by registering with your email or phone number and selecting a role (User or Agent). After registration, you can log in and start using PayWave services."
+    },
+    {
+        question: "Is PayWave safe to use?",
+        answer:
+            "Yes. PayWave uses JWT-based authentication, encrypted transactions, and role-based access control to ensure the security of your data and funds."
+    },
+    {
+        question: "How can I add money to my wallet?",
+        answer:
+            "You can add money to your wallet by visiting an authorized PayWave agent and requesting a cash-in. The agent will deposit funds directly into your wallet."
+    },
+    {
+        question: "Can I withdraw money from my wallet?",
+        answer:
+            "Yes. Users can withdraw money through authorized agents by requesting a cash-out from their wallet balance."
+    },
+    {
+        question: "Are there any transaction fees?",
+        answer:
+            "Some transactions may include service fees depending on the transaction type. Fee details are shown clearly before confirming any transaction."
+    },
+    {
+        question: "What should I do if a transaction fails?",
+        answer:
+            "If a transaction fails, the amount will be automatically reversed. You can also contact PayWave support through the Contact page for assistance."
+    },
+    {
+        question: "Can I use PayWave on mobile devices?",
+        answer:
+            "Yes. PayWave is fully responsive and optimized for mobile, tablet, and desktop devices."
+    }
+]
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { HelpCircle } from "lucide-react";
-
-export default function FAQPage() {
-    const faqs = [
-        {
-            q: "What is Pay Wave?",
-            a: "Pay Wave is a secure digital payment platform that allows users, agents, and businesses to send, receive, and manage money easily. It's designed for financial inclusion, supporting cash-in/out via agents and seamless mobile transactions."
-        },
-        {
-            q: "How do I create an account?",
-            a: "Visit our registration page, select your role (User or Agent), provide your details including phone number and password, and complete the verification process. Admins are managed separately."
-        },
-        {
-            q: "Is my money safe?",
-            a: "Yes. We use bank-grade encryption, optional 2FA, and continuous monitoring to protect funds. All transactions are secured with end-to-end encryption."
-        },
-        {
-            q: "How do I deposit money into my wallet?",
-            a: "As a user, you can deposit via an agent (cash-in), bank transfer, or other integrated methods. Agents handle cash deposits directly."
-        },
-        {
-            q: "How do I send money to someone?",
-            a: "From your dashboard, select 'Send Money', enter the recipient's phone or email, specify the amount, and confirm. Transactions are instant."
-        },
-        {
-            q: "What are the transaction fees?",
-            a: "Fees vary by transaction type: free for P2P within limits, small percentages for withdrawals or merchant payments. Check our pricing page for details."
-        },
-        {
-            q: "How do I become an agent?",
-            a: "Sign up on the agent page and complete KYC — our team will reach out with next steps for approval."
-        },
-        {
-            q: "What currencies do you support?",
-            a: "Currently BDT (৳). We plan to add more local currencies based on demand."
-        },
-        {
-            q: "How can I contact support?",
-            a: "Use the contact form on our site, email support@orbitwallet.example, or call +880 1X XXX XXXX during business hours."
-        },
-        {
-            q: "Can I use Pay Wave internationally?",
-            a: "Currently focused on local markets, but we're expanding. Cross-border features are in development."
-        },
-    ];
-
+export default function FAQ() {
     return (
-        <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="max-w-4xl mx-auto text-center">
-                <Badge className="mb-4 bg-blue-100 text-blue-800 dark:bg-slate-800 dark:text-slate-200">
-                    <HelpCircle className="w-4 h-4 mr-2" />
-                    FAQs
-                </Badge>
-
-                <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-slate-100 leading-tight">
+        <section className="container mx-auto px-4 py-16 space-y-16">
+            {/* Header */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-3xl mx-auto text-center"
+            >
+                <h1 className="text-4xl font-bold mb-4">
                     Frequently Asked Questions
                 </h1>
-
-                <p className="mt-4 text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-                    Find quick answers to common questions about using Pay Wave, our features, security, and more. If you need further help, contact our support team.
+                <p className="text-muted-foreground text-lg">
+                    Find answers to common questions about PayWave, account usage,
+                    security, and transactions.
                 </p>
-            </div>
+            </motion.div>
 
-            <div className="mt-12 max-w-4xl mx-auto">
-                <Card className="rounded-2xl bg-card/40 shadow-sm">
-                    <CardContent className="p-6">
-                        <h2 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-6">Common Questions</h2>
-                        <div className="space-y-6">
-                            {faqs.map((f, idx) => (
-                                <div key={idx}>
-                                    <details className="group">
-                                        <summary className="cursor-pointer list-none text-lg font-medium text-slate-800 dark:text-slate-100">{f.q}</summary>
-                                        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{f.a}</p>
-                                    </details>
-                                    {idx < faqs.length - 1 && <Separator className="my-4" />}
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-        </main>
-    );
+            {/* FAQ Section */}
+            <Card className="max-w-3xl mx-auto p-6 bg-card/50">
+                <Accordion type="single" collapsible className="w-full">
+                    {faqs.map((faq, index) => (
+                        <AccordionItem key={index} value={`item-${index}`}>
+                            <AccordionTrigger className="text-left">
+                                {faq.question}
+                            </AccordionTrigger>
+                            <AccordionContent className="text-muted-foreground">
+                                {faq.answer}
+                            </AccordionContent>
+                        </AccordionItem>
+                    ))}
+                </Accordion>
+            </Card>
+        </section>
+    )
 }
