@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 export default function About() {
     return (
-        <section className="container mx-auto px-4 py-16 space-y-20">
+        <section className="max-w-6xl mx-auto px-4 py-16 space-y-20">
             {/* Hero / Intro */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}

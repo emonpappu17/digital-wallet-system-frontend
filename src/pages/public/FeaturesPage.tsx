@@ -63,7 +63,7 @@ export default function FeaturesPage() {
     const currentRole = data?.data?.role
     const route = currentRole?.toLowerCase() || 'login';
     return (
-        <section className="container mx-auto px-4 py-16">
+        <section className="max-w-6xl mx-auto px-4 py-16">
             {/* Header */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}

@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router';
 import { motion } from "framer-motion";
+import CoreFeatures from './CoreFeatures';
+import HowItWorks from './HowItWorks';
 
 const HeroSection = () => {
     const { data } = useUserProfileQuery(undefined);
@@ -223,6 +225,10 @@ const HeroSection = () => {
                     </motion.div>
                 </div>
             </div>
+
+            <CoreFeatures></CoreFeatures>
+
+            <HowItWorks></HowItWorks>
 
             {/* Bottom Wave */}
             <div className="absolute bottom-0 left-0 right-0">
